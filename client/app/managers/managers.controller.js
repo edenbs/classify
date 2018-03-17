@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('classify').controller('ManagersController', function($scope, $mdEditDialog, managers, schools, $managers, $q, $mdDialog) {
+angular.module('classify').controller('ManagersController', function($scope, $mdEditDialog, managers, schools, $managers, $q, $mdDialog, $mdToast) {
     $scope.items = managers;
     $scope.schools = schools;
     $scope.selected = [];
@@ -28,6 +28,7 @@ angular.module('classify').controller('ManagersController', function($scope, $md
             return $managers.delete({}, item).$promise;
         }))
         .then(function () {
+                $mdToast.showSimple('Manager deleted successfully');
                 $scope.getItems();
             });
     };
@@ -46,21 +47,21 @@ angular.module('classify').controller('ManagersController', function($scope, $md
                 return $managers.save(manager).$promise
             })
             .then(function () {
-                alert('manager added successfully');
+                $mdToast.showSimple('Manager added successfully');
                 $scope.getItems();
             })
-            .catch(function () {
-                alert('error adding manager');
+            .catch(function (err) {
+                if (err) $mdToast.showSimple('Error adding a school manager');
             });
     };
 
     $scope.changeSchool = function (manager) {
         return $managers.update({}, manager).$promise
             .then(function () {
-                alert('yay! saved!')
+                $mdToast.showSimple("Manager's school updated successfully");
             })
             .catch(function (err) {
-                alert(err);
+                if (err) $mdToast.showSimple("Error updating a manager's school");
             });
-    }
+    };
 });

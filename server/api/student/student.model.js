@@ -3,6 +3,7 @@ import {createSeedModel} from 'mongoose-plugin-seed';
 import seed from './student.seed';
 import mongoosePaginate from 'mongoose-paginate';
 import XRegExp from 'xregexp';
+import idvalidator from 'mongoose-id-validator';
 
 const Schema = mongoose.Schema;
 
@@ -45,6 +46,7 @@ const studentSchema = new Schema({
     }
 });
 
+studentSchema.plugin(idvalidator);
 studentSchema.plugin(mongoosePaginate);
 
 export default createSeedModel('Student', studentSchema, seed);

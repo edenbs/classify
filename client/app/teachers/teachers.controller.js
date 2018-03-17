@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('classify').controller('TeachersController', function($scope, $mdEditDialog, teachers, $teachers, $q, $mdDialog) {
+angular.module('classify').controller('TeachersController', function($scope, $mdEditDialog, teachers, $teachers, $q, $mdDialog, $mdToast) {
     $scope.items = teachers;
     $scope.selected = [];
 
@@ -8,6 +8,16 @@ angular.module('classify').controller('TeachersController', function($scope, $md
         sort: 'name.first',
         limit: 5,
         page: 1
+    };
+
+    $scope.onFilter = function () {
+        $scope.query.page = 1;
+        return $scope.getItems();
+    };
+
+    $scope.clearFilter = function (name) {
+        _.set($scope.query, name, '');
+        return $scope.getItems();
     };
 
     $scope.getItems = function () {
@@ -27,6 +37,7 @@ angular.module('classify').controller('TeachersController', function($scope, $md
             return $teachers.delete({}, item).$promise;
         }))
         .then(function () {
+                $mdToast.showSimple('Teacher deleted successfully');
                 $scope.getItems();
             });
     };
@@ -42,21 +53,21 @@ angular.module('classify').controller('TeachersController', function($scope, $md
                 return $teachers.save(teacher).$promise;
             })
             .then(function () {
-                alert('teacher added successfully');
+                $mdToast.showSimple('Teacher added successfully');
                 $scope.getItems();
             })
             .catch(function (err) {
-                alert('error adding teacher')
+                if (err) $mdToast.showSimple('Error adding teacher');
             });
     };
 
     $scope.changeRole = function (teacher) {
         return $teachers.update({}, teacher).$promise
             .then(function () {
-                alert('yay! saved!')
+                $mdToast.showSimple('Teacher role changed successfully');
             })
             .catch(function (err) {
-                alert(err);
+                if (err) $mdToast.showSimple('Error changing teacher role');
             });
     }
 });

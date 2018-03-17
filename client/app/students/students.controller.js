@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-angular.module('classify').controller('StudentsController', function($scope, $mdEditDialog, students, $students, $q, $mdDialog) {
+angular.module('classify').controller('StudentsController', function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast, auth) {
     $scope.items = students;
     $scope.selected = [];
 
@@ -75,7 +75,7 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             return $students.delete({}, item).$promise;
         }))
             .then(function () {
-                alert('deleted successfully');
+                $mdToast.showSimple('Student deleted successfully');
                 $scope.getItems();
             });
     };
@@ -91,11 +91,11 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                 return $students.save(student).$promise;
             })
             .then(function () {
-                alert('student added successfully');
+                $mdToast.showSimple('Student added successfully');
                 $scope.getItems();
             })
             .catch(function (err) {
-                alert('error adding student')
+                if (err) $mdToast.showSimple('Error adding student');
             });
     };
 
@@ -115,10 +115,10 @@ angular.module('classify').controller('StudentsController', function($scope, $md
 
                 $scope.deferred
                     .then(function () {
-                        alert('student updated successfully');
+                        $mdToast.showSimple('Student updated successfully');
                     })
                     .catch(function (err) {
-                        alert('error updating student');
+                        if (err) $mdToast.showSimple('Error updating student');
                     });
 
                 return $scope.deferred;
@@ -129,10 +129,14 @@ angular.module('classify').controller('StudentsController', function($scope, $md
     $scope.changeGender = function (student) {
         return $students.update({}, student).$promise
             .then(function () {
-                alert('yay! saved!')
+                $mdToast.showSimple('Student gender changed');
             })
             .catch(function (err) {
-                alert(err);
+                if (err) $mdToast.showSimple('Error changing student gender');
             });
-    }
+    };
+
+    $scope.isEditor = function () {
+        return auth.hasRole('editor');
+    };
 });
