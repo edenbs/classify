@@ -28,7 +28,7 @@ export function index(req) {
 }
 
 export function create (req) {
-    const data = _.pick(req.body, ['id', 'name', 'class', 'gender', 'avgGrade']);
+    const data = _.pick(req.body, ['id', 'name', 'class', 'gender', 'avgGrade','social','prefer']);
 
     data.school = req.user.school;
 
@@ -38,7 +38,7 @@ export function create (req) {
 }
 
 export function update(req) {
-    var data = _.pick(req.body, ['name', 'class', 'gender', 'avgGrade']);
+    var data = _.pick(req.body, ['name', 'class', 'gender', 'avgGrade','social','prefer']);
 
     return Student.findById(req.params.id)
         .then(errorIfEmpty)

@@ -8,6 +8,8 @@ import idvalidator from 'mongoose-id-validator';
 const Schema = mongoose.Schema;
 
 const genders = ['male', 'female'];
+const socialgrades = [1,2,3,4];
+
 
 const studentSchema = new Schema({
     id: {
@@ -43,6 +45,18 @@ const studentSchema = new Schema({
         type: Number,
         min: 0,
         max: 100
+    },
+    social: {
+        enum:socialgrades,
+        type: Number,
+        min: 1,
+        max: 4
+    },
+    prefer: {
+        type:{
+            label: String,
+            value: String
+        }
     }
 });
 

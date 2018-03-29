@@ -5,6 +5,7 @@
         </div>
     </md-toolbar>
     <form name="addStudentForm">
+       <div>
         <md-dialog-contnet layout="column" class="md-dialog-content">
             <md-input-container>
                 <label>ID</label>
@@ -33,9 +34,36 @@
                     <p ng-message="pattern">Class must be formatted כיתה-מספר</p>
                 </div>
             </md-input-container>
+            <md-input-container>
+                <label>Social Grade</label>
+                <input name="social" ng-model="student.social"  ng-pattern='/^([1-4])$/' required/>
+                <div ng-messages="addStudentForm.social.$error" md-auto-hide="true"
+                     ng-if="addStudentForm.social.$invalid && addStudentForm.social.$touched">
+                    <p ng-message="pattern">Social Grade must be between 1-4</p>
+                </div>
+            </md-input-container>
+           <div>
+               <label>Personal Preferations</label>
+               <md-input-container>
+                   <label>First preferations</label>
+                   <input name="FirstPrefer" ng-model="student.prefer.first"/>
+               </md-input-container>
+               <md-input-container>
+                   <label>Second preferations</label>
+                   <input name="SecondPrefer" ng-model="student.prefer.second" />
+                </md-input-container>
+               <div ng-messages="addStudentForm.FirstPrefer.$error" md-auto-hide="true"
+                    ng-if="(addStudentForm.FirstPrefer.$invalid && addStudentForm.SecondPrefer.$invalid )&&
+                     (addStudentForm.FirstPrefer.$touched && addStudentForm.SecondPrefer.$touched)">
+                   <p ng-message="pattern">Personal preferations must be at most two students id </p>
+               </div>
+           </div>
         </md-dialog-contnet>
+       </div>
+        <div>
         <md-dialog-actions>
             <md-button ng-click="save()" class="md-primary" ng-disabled="addStudentForm.$invalid">Save</md-button>
         </md-dialog-actions>
+        </div>
     </form>
 </md-dialog>

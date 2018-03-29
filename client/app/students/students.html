@@ -58,6 +58,9 @@
                     <th md-column md-order-by="class">Class</th>
                     <th md-column md-order-by="gender">Gender</th>
                     <th md-column md-order-by="avgGrade">Average Grade</th>
+                    <th md-column md-order-by="social">Social Grade</th>
+                    <th md-column md-order-by="prefer.first">First Preferations</th>
+                    <th md-column md-order-by="prefer.second">Second Preferations</th>
                 </tr>
                 </thead>
                 <tbody md-body>
@@ -80,6 +83,12 @@
                     <td md-cell ng-if="!isEditor()">{{ item.gender }}</td>
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'avgGrade')">{{ item.avgGrade }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.avgGrade }}</td>
+                    <td md-cell ng-if="!isEditor()">{{ item.social }}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'social')" >{{ item.social }} </td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'prefer.first')">{{item.prefer['first']}}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'prefer.second')">{{item.prefer['second']}}</td>
+                    <td md-cell ng-if="!isEditor()" >{{item.prefer['first']}}</td>
+                    <td md-cell ng-if="!isEditor()" >{{item.prefer['second']}}</td>
                 </tr>
                 </tbody>
             </table>

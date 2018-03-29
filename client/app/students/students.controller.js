@@ -26,6 +26,9 @@ angular.module('classify').controller('StudentsController', function($scope, $md
         avgGrade: {
             'required': true,
             'ng-pattern': '/^([0-9]|[1-8][0-9]|9[0-9]|100)$/'
+        },
+        social: {
+            'pattern': '[1-4]'
         }
     };
 
@@ -45,6 +48,9 @@ angular.module('classify').controller('StudentsController', function($scope, $md
         avgGrade: {
             'required': 'Avergae grade is required',
             'pattern': 'Avergae grade must be between 0 to 100'
+        },
+        social: {
+            'pattern': 'social grade must be between 1 and 4'
         }
     };
 
@@ -118,7 +124,7 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                         $mdToast.showSimple('Student updated successfully');
                     })
                     .catch(function (err) {
-                        if (err) $mdToast.showSimple('Error updating student');
+                        if (err) $mdToast.showSimple('Error updating student: ' + err.data.message);
                     });
 
                 return $scope.deferred;
