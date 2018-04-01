@@ -1,0 +1,16 @@
+<div layout="column" layout-margin class="text-center">
+    <h1>Generate Page</h1>
+
+    <p> 
+        In this page you can create the classes based on student data.
+        But first you need to enter some more data
+    </p>
+
+    <form>
+        <fieldset>
+            <legend>More information:</legend><br>
+            Maximum number of students in a class: <input type="text" class="max" min="15" max="50"  id="MaxStudents"  value="30" >
+        </fieldset>
+        <br><input type="button" ng-click="generate($event)" value="Generate">
+    </form>
+</div>

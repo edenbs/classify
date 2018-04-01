@@ -1,0 +1,131 @@
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        body {font-family: Arial;}
+        
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: rgb(228, 184, 102);
+        }
+        
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        </style>
+        </head>
+<body>
+    <div class="tab">
+      <button class="tablinks" ng-click="openCity($event, 'Class1')">class 1</button>
+      <button class="tablinks" ng-click="openCity($event, 'Class2')">class 2</button>
+      <button class="tablinks" ng-click="openCity($event, 'Class3')">class 3</button>
+    </div>
+    
+    <div id="Class1" class="tabcontent">
+      <h3>Class1</h3>
+      <md-table-container>
+        <table md-table multiple ng-model="selected" md-progress="deferred">
+            <thead md-head md-order="query.order" md-on-reorder="onOrderChange" >
+            <tr md-row>
+                <th md-column md-order-by="id">ID</th>
+                <th md-column md-order-by="name.first">First Name</th>
+                <th md-column md-order-by="name.last">Last Name</th>
+                <th md-column md-order-by="gender">Gender</th>
+                <th md-column md-order-by="avgGrade">Average Grade</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row md-select="item" md-select-id="id" md-auto-select ng-repeat="item in items.docs">
+                <td md-cell>{{ item.id }}</td>
+                <td md-cell>{{ item.name.first }}</td>
+                <td md-cell>{{ item.name.last }}</td>
+                <td md-cell>{{ item.gender }}</td>
+                <td md-cell>{{ item.avgGrade }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    </div>
+    
+    <div id="Class2" class="tabcontent">
+      <h3>Class2</h3>
+      <md-table-container>
+        <table md-table multiple ng-model="selected" md-progress="deferred">
+            <thead md-head md-order="query.order" md-on-reorder="onOrderChange" >
+            <tr md-row>
+                <th md-column md-order-by="id">ID</th>
+                <th md-column md-order-by="name.first">First Name</th>
+                <th md-column md-order-by="name.last">Last Name</th>
+                <th md-column md-order-by="gender">Gender</th>
+                <th md-column md-order-by="avgGrade">Average Grade</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row md-select="item" md-select-id="id" md-auto-select ng-repeat="item in items.docs">
+                <td md-cell>{{ item.id }}</td>
+                <td md-cell>{{ item.name.first }}</td>
+                <td md-cell>{{ item.name.last }}</td>
+                <td md-cell>{{ item.gender }}</td>
+                <td md-cell>{{ item.avgGrade }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    </div>
+    
+    <div id="Class3" class="tabcontent">
+      <h3>Class3</h3>
+      <md-table-container>
+        <table md-table multiple ng-model="selected" md-progress="deferred">
+            <thead md-head md-order="query.order" md-on-reorder="onOrderChange" >
+            <tr md-row>
+                <th md-column md-order-by="id">ID</th>
+                <th md-column md-order-by="name.first">First Name</th>
+                <th md-column md-order-by="name.last">Last Name</th>
+                <th md-column md-order-by="gender">Gender</th>
+                <th md-column md-order-by="avgGrade">Average Grade</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row md-select="item" md-select-id="id" md-auto-select ng-repeat="item in items.docs">
+                <td md-cell>{{ item.id }}</td>
+                <td md-cell>{{ item.name.first }}</td>
+                <td md-cell>{{ item.name.last }}</td>
+                <td md-cell>{{ item.gender }}</td>
+                <td md-cell>{{ item.avgGrade }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    </div>
+    
+         
+    </body>
