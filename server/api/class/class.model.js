@@ -12,6 +12,11 @@ const classSchema = new Schema({
        unique: true,
        min: 1
    },
+    school: {
+        type: Schema.Types.ObjectId,
+        ref: 'School',
+        required: true
+    },
     students: [{
         type: Schema.Types.ObjectId,
         ref: 'Student'
