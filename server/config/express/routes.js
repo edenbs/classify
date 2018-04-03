@@ -1,5 +1,6 @@
 import createError from 'http-errors';
 
+import classRoute from '../../api/class';
 import schoolRoute from '../../api/school';
 import userRoute from '../../api/user';
 import managerRoute from '../../api/manager';
@@ -13,6 +14,7 @@ export default app => {
     app.use('/api/managers', managerRoute);
     app.use('/api/teachers', teacherRoute);
     app.use('/api/students', studentRoute);
+    app.use('/api/classes', classRoute);
 
     app.use('/auth', authRoute);
 
