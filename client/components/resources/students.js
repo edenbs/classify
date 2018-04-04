@@ -1,6 +1,6 @@
 angular.module('classify')
     .service('$students', function($resource) {
-        return $resource('/api/students/:id', {}, {
+        return $resource('/api/students', {}, {
             'paginate': {
                 method: 'GET',
                 params: {
@@ -9,7 +9,9 @@ angular.module('classify')
                     page: 1
                 }
             },
-            'update': {method: 'PUT', params: {id: '@_id'}},
-            'delete': {method: 'DELETE', params: {id: '@_id'}}
+            'update': {url: '/api/students/:id', method: 'PUT', params: {id: '@_id'}},
+            'delete': {url: '/api/students/:id',method: 'DELETE', params: {id: '@_id'}},
+            'upload': {url: '/api/students/upload',method: 'PUT'}
+
         })
     });

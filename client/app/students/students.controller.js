@@ -1,6 +1,7 @@
 ﻿'use strict';
 
-angular.module('classify').controller('StudentsController', function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast, auth) {
+angular.module('classify').controller('StudentsController'
+    ,function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast ,auth,Upload,$timeout) {
     $scope.items = students;
     $scope.selected = [];
 
@@ -92,8 +93,7 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             templateUrl: 'app/students/new-student/new-student.html',
             targetEvent: ev,
             clickOutsideToClose: true
-        })
-            .then(function (student) {
+        }).then(function (student) {
                 return $students.save(student).$promise;
             })
             .then(function () {
@@ -132,6 +132,10 @@ angular.module('classify').controller('StudentsController', function($scope, $md
         })
     };
 
+    $scope.isEditor = function () {
+            return auth.hasRole('editor');
+        };
+
     $scope.changeGender = function (student) {
         return $students.update({}, student).$promise
             .then(function () {
@@ -142,7 +146,29 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             });
     };
 
-    $scope.isEditor = function () {
-        return auth.hasRole('editor');
+    $scope.changeSocial = function (student) {
+        return $students.update({}, student).$promise
+            .then(function () {
+                $mdToast.showSimple('Student social grade changed');
+            })
+            .catch(function (err) {
+                if (err) $mdToast.showSimple('Error changing student social grade');
+            });
+    };
+
+    $scope.uploadStudents = function (event) {
+        $mdDialog.show({
+            controller: 'UploadStudentsController',
+            templateUrl: 'app/students/upload-students/upload-students.html',
+            targetEvent: event,
+            clickOutsideToClose: true
+        }).then(function () {
+            $mdToast.showSimple('Uploading operation ended');
+            $scope.getItems();
+
+        }).catch(function (err) {
+            if (err) $mdToast.showSimple('Error uploading students');
+        });
+
     };
 });

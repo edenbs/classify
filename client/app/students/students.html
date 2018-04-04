@@ -84,7 +84,12 @@
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'avgGrade')">{{ item.avgGrade }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.avgGrade }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.social }}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'social')" >{{ item.social }} </td>
+                    <td md-cell ng-if="isEditor()">
+                        <md-input-container>
+                             <input type="number" min="1" max="4" ng-model="item.social"
+                                    ng-change="changeSocial(item)"  required/>
+                        </md-input-container>
+                    </td>
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'prefer.first')">{{item.prefer['first']}}</td>
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'prefer.second')">{{item.prefer['second']}}</td>
                     <td md-cell ng-if="!isEditor()" >{{item.prefer['first']}}</td>
@@ -101,7 +106,14 @@
         </md-table-pagination>
     </md-card>
 </div>
+<div>
 <md-button class="md-fab md-fab-bottom-right md-primary" layout layout-align="center center"
            ng-click="addItem($event)" aria-label="Add new constraint" ng-show="isEditor()">
-    <i class="mdi mdi-plus mdi-24px"></i>
+          <i class="mdi mdi-plus mdi-24px"></i>
 </md-button>
+<md-button class="md-primary md-fab-bottom-left" layout layout-align="center center"
+           ng-click="uploadStudents($event)" aria-label="Upload Stdents" ng-show="isEditor()">
+          Load from Excel
+          <i class="material-icons">file_upload</i>
+</md-button>
+</div>
