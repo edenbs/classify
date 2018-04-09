@@ -16,6 +16,10 @@ const validateJwt = pify(expressJwt({secret: process.env.SESSION_SECRET}));
  */
 export function isAuthenticated () {
   return (req, res) => {
+    if (req.query && req.query.hasOwnProperty('access_token')) {
+      req.headers.authorization = `Bearer ${req.query.access_token}`;
+    }
+
     return validateJwt(req, res)
       .then(() => {
         return User.findById(req.user._id);

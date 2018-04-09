@@ -9,7 +9,7 @@ import _ from 'lodash';
 const errorIfEmpty = result => result || Promise.reject(createError(404));
 const errorIfNotSchool = (c, school) => c.school.equals(school) ? c : Promise.reject(createError(403));
 
-export function index() {
+export function index(req) {
     return Class.find({school: req.user.school});
 }
 
@@ -36,7 +36,8 @@ export function download(req, res) {
                     'Last Name': s.name.last,
                     'ID': s.id,
                     'Gender': s.gender,
-                    'Average Grade': s.avgGrade
+                    'Average Grade': s.avgGrade,
+                    'Social': s.social
                 })));
                 XLSX.utils.book_append_sheet(wb, ws, `Class ${c.index}`);
             });

@@ -1,0 +1,23 @@
+<div flex="60" layout="row" layout-align="center center" layout-padding>
+    <md-card flex="50" layout="column" layout-margin>
+        <div layout="row" layout-align="center">
+            <h1>Generate Classes</h1>
+        </div>
+        <div layout="row" layout-align="center">
+            <span>
+                In this page you can create the classes based on student data.
+                But first you need to enter some more data
+            </span>
+        </div>
+        <fieldset layout="row">
+            <legend>More information:</legend><br>
+            <md-input-container>
+                <label>Maximum number of students in a class:</label>
+                <input class="max" min="1" max="40" ng-model="maxStudents" >
+            </md-input-container>
+        </fieldset>
+        <div layout="row" layout-align="end">
+            <md-button ng-click="generate($event)">Generate</md-button>
+        </div>
+    </md-card>
+</div>

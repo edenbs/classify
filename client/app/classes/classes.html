@@ -1,0 +1,57 @@
+<div layout="column" layout-margin>
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!selected.length">
+            <div class="md-toolbar-tools">
+                <span>Classes</span>
+            </div>
+        </md-toolbar>
+        <div ng-cloak>
+            <h3 ng-if=!classes.length>No Classes Were Generated</h3>
+            <md-tabs md-dynamic-height md-border-bottom ng-if=classes.length>
+                <md-tab ng-repeat="class in classes | orderBy: 'index'" label="{{class.index}}" md-on-select="loadClass(class)">
+                    <md-table-container ng-show="currClass">
+                        <table md-table>
+                            <thead md-head>
+                            <tr md-row>
+                                <th md-column>ID</th>
+                                <th md-column>First Name</th>
+                                <th md-column>Last Name</th>
+                                <th md-column>Gender</th>
+                                <th md-column>Social</th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row ng-repeat="student in currClass.students | orderBy: 'name.last' | limitTo: paginate.limit: (paginate.currPage - 1) * paginate.limit">
+                                <td md-cell>{{ student.id }}</td>
+                                <td md-cell>{{ student.name.first }}</td>
+                                <td md-cell>{{ student.name.last }}</td>
+                                <td md-cell>{{ student.gender }}</td>
+                                <td md-cell>{{ student.social }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+                    <div layout="row">
+                        <div layout="column" layout-align="center" class="md-table-pagination">
+                            <span>Statistics&nbsp;&nbsp;-&nbsp;&nbsp;
+                                Male-Female proportion in class is {{currClass.genders.male/currClass.students.length}}-{{currClass.genders.female/currClass.students.length}} |
+                                Average grade is {{currClass.avgGrade}}
+                            </span>
+                        </div>
+                        <md-table-pagination
+                                md-limit="paginate.limit"
+                                md-page="paginate.currPage"
+                                md-total="{{class.students.length}}" flex>
+                        </md-table-pagination>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </div>
+    </md-card>
+</div>
+<md-button class="md-fab md-fab-bottom-right md-primary" layout layout-align="center center"
+           ng-click="export($event)" aria-label="Add new constraint">
+    <md-tooltip md-direction="top">Export</md-tooltip>
+    <i class="mdi mdi-download mdi-24px"></i>
+</md-button>
