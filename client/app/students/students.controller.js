@@ -1,8 +1,17 @@
 ﻿'use strict';
 
-angular.module('classify').controller('StudentsController', function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast, auth) {
+angular.module('classify').controller('StudentsController'
+    ,function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast ,auth,Upload,$timeout) {
     $scope.items = students;
     $scope.selected = [];
+
+    $scope.simulateQuery=true;
+    $scope.searchStds = [];
+    $scope.searchQuery= {
+        sort: 'name.first',
+        limit: 10,
+        page: 1
+    };
 
     $scope.query = {
         sort: 'name.first',
@@ -26,6 +35,9 @@ angular.module('classify').controller('StudentsController', function($scope, $md
         avgGrade: {
             'required': true,
             'ng-pattern': '/^([0-9]|[1-8][0-9]|9[0-9]|100)$/'
+        },
+        social: {
+            'pattern': '[1-4]'
         }
     };
 
@@ -45,6 +57,9 @@ angular.module('classify').controller('StudentsController', function($scope, $md
         avgGrade: {
             'required': 'Avergae grade is required',
             'pattern': 'Avergae grade must be between 0 to 100'
+        },
+        social: {
+            'pattern': 'social grade must be between 1 and 4'
         }
     };
 
@@ -86,8 +101,7 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             templateUrl: 'app/students/new-student/new-student.html',
             targetEvent: ev,
             clickOutsideToClose: true
-        })
-            .then(function (student) {
+        }).then(function (student) {
                 return $students.save(student).$promise;
             })
             .then(function () {
@@ -118,13 +132,17 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                         $mdToast.showSimple('Student updated successfully');
                     })
                     .catch(function (err) {
-                        if (err) $mdToast.showSimple('Error updating student');
+                        if (err) $mdToast.showSimple('Error updating student: ' + err.data.message);
                     });
 
                 return $scope.deferred;
             }
         })
     };
+
+    $scope.isEditor = function () {
+            return auth.hasRole('editor');
+        };
 
     $scope.changeGender = function (student) {
         return $students.update({}, student).$promise
@@ -136,7 +154,57 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             });
     };
 
-    $scope.isEditor = function () {
-        return auth.hasRole('editor');
+    $scope.uploadStudents = function (event) {
+        $mdDialog.show({
+            controller: 'UploadStudentsController',
+            templateUrl: 'app/students/upload-students/upload-students.html',
+            targetEvent: event,
+            clickOutsideToClose: true
+        }).then(function () {
+            $mdToast.showSimple('Uploading operation ended');
+            $scope.getItems();
+
+        }).catch(function (err) {
+            if (err) $mdToast.showSimple('Error uploading students');
+        });
+
+    };
+
+    /* Preference section */
+    /*Searching for preferred student*/
+    $scope.querySearch = function(search) {
+        var deferred;
+        $scope.searchQuery["name"] = search;
+        $students.search($scope.searchQuery).$promise.then(function (items) {$scope.searchStds =items.docs});
+
+        if ($scope.simulateQuery) {
+           deferred = $q.defer();
+            $timeout(function () {
+                deferred.resolve($scope.searchStds);
+            }, Math.random() * 1000, false);
+            return deferred.promise;
+        } else {
+            return $scope.searchStds;
+        }
+    };
+
+    /*Changing current user relevant preference*/
+    $scope.changePreference = function (property,student,prefStd) {
+         _.set(student, property, prefStd.id);
+         $scope.deferred = $students.update(student).$promise;
+
+         $scope.deferred
+             .then(function () { $mdToast.showSimple('Student preference updated successfully');
+             })
+             .catch(function (err) { if (err) $mdToast.showSimple('Error updating student preference: ' + err.data.message);
+             });
+
+         return $scope.deferred; };
+
+    /*Present given student full name*/
+    $scope.getFullName = function (item) {
+        var fullName  = item ? (item.name.first + " " +item.name.last): "No student chosed";
+
+        return fullName;
     };
 });

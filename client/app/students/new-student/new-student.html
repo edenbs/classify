@@ -5,6 +5,7 @@
         </div>
     </md-toolbar>
     <form name="addStudentForm">
+       <div>
         <md-dialog-contnet layout="column" class="md-dialog-content">
             <md-input-container>
                 <label>ID</label>
@@ -33,9 +34,63 @@
                     <p ng-message="pattern">Class must be formatted כיתה-מספר</p>
                 </div>
             </md-input-container>
+            <md-input-container>
+                <label>Social Grade</label>
+                <input name="social" type="number" min="1" max="4" ng-model="student.social" required/>
+                <div ng-messages="addStudentForm.social.$error" md-auto-hide="true"
+                     ng-if="addStudentForm.social.$invalid && addStudentForm.social.$touched">
+                    <p ng-message="pattern">Social Grade must be between 1-4</p>
+                </div>
+            </md-input-container>
+           <div>
+               <label>Personal Preference</label>
+               <div>
+                   <p>First Preference:</p>
+                   <md-autocomplete md-selected-item="selectedItem_f" md-search-text="searchStudent_f"
+                                    md-selected-item-change="changePreference('prefer.first',student,selectedItem_f)"
+                                    md-items="searchItem_f in querySearch(searchStudent_f)"
+                                    md-item-text="getFullName(searchItem_f)" placeholder="choose preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{searchItem_f.name.first}}  {{searchItem_f.name.last}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+               </div>
+                <div>
+                    <p>Second Preference:</p>
+                   <md-autocomplete md-selected-item="selectedItem_s" md-search-text="searchStudent_s"
+                                        md-selected-item-change="changePreference('prefer.second',student,selectedItem_s)"
+                                        md-items="searchItem_s in querySearch(searchStudent_s)"
+                                        md-item-text="getFullName(searchItem_s)" md-min-length="0" placeholder="choose  preference">
+                           <md-item-template>
+                               <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{searchItem_s.name.first }}  {{ searchItem_s.name.last}}</span>
+                           </md-item-template>
+                       </md-autocomplete>
+                </div>
+                <div>
+                    <p >Third Preference:</p>
+                    <md-autocomplete md-selected-item="selectedItem_t" md-search-text="searchStudent_t"
+                                    md-selected-item-change="changePreference('prefer.third',student,selectedItem_t)"
+                                    md-items="searchItem_t in querySearch(searchStudent_t)"
+                                    md-item-text="getFullName(searchItem_t)" md-min-length="0" placeholder="choose preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{searchItem_t.name.first }}  {{ searchItem_t.name.last}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+                </div>
+
+
+               <div ng-messages="addStudentForm.FirstPrefer.$error" md-auto-hide="true"
+                    ng-if="(addStudentForm.FirstPrefer.$invalid && addStudentForm.SecondPrefer.$invalid )&&
+                     (addStudentForm.FirstPrefer.$touched && addStudentForm.SecondPrefer.$touched)">
+                   <p ng-message="pattern">Personal preferations must be at most two students id </p>
+               </div>
+           </div>
         </md-dialog-contnet>
+       </div>
+       <div>
         <md-dialog-actions>
             <md-button ng-click="save()" class="md-primary" ng-disabled="addStudentForm.$invalid">Save</md-button>
         </md-dialog-actions>
+        </div>
     </form>
 </md-dialog>

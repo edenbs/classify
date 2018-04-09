@@ -18,7 +18,7 @@ const studentSchema = new Schema({
     name: {
         first: String,
         last: String
-    },
+     },
     class: {
         type: String,
         validate: {
@@ -43,6 +43,17 @@ const studentSchema = new Schema({
         type: Number,
         min: 0,
         max: 100
+    },
+    social: {
+        type: Number,
+        min: 1,
+        max: 4
+    },
+    prefer: {
+        type:{
+            label: String,
+            value: String
+        }
     }
 });
 
