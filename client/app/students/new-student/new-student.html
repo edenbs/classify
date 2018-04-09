@@ -43,15 +43,42 @@
                 </div>
             </md-input-container>
            <div>
-               <label>Personal Preferations</label>
-               <md-input-container>
-                   <label>First preferations</label>
-                   <input name="FirstPrefer" ng-model="student.prefer.first"/>
-               </md-input-container>
-               <md-input-container>
-                   <label>Second preferations</label>
-                   <input name="SecondPrefer" ng-model="student.prefer.second" />
-                </md-input-container>
+               <label>Personal Preference</label>
+               <div>
+                   <p>First Preference:</p>
+                   <md-autocomplete md-selected-item="selectedItem_f" md-search-text="searchStudent_f"
+                                    md-selected-item-change="changePreference('prefer.first',student,selectedItem_f)"
+                                    md-items="searchItem_f in querySearch(searchStudent_f)"
+                                    md-item-text="getFullName(searchItem_f)" placeholder="choose preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{searchItem_f.name.first}}  {{searchItem_f.name.last}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+               </div>
+                <div>
+                    <p>Second Preference:</p>
+                   <md-autocomplete md-selected-item="selectedItem_s" md-search-text="searchStudent_s"
+                                        md-selected-item-change="changePreference('prefer.second',student,selectedItem_s)"
+                                        md-items="searchItem_s in querySearch(searchStudent_s)"
+                                        md-item-text="getFullName(searchItem_s)" md-min-length="0" placeholder="choose  preference">
+                           <md-item-template>
+                               <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{searchItem_s.name.first }}  {{ searchItem_s.name.last}}</span>
+                           </md-item-template>
+                       </md-autocomplete>
+                </div>
+                <div>
+                    <p >Third Preference:</p>
+                    <md-autocomplete md-selected-item="selectedItem_t" md-search-text="searchStudent_t"
+                                    md-selected-item-change="changePreference('prefer.third',student,selectedItem_t)"
+                                    md-items="searchItem_t in querySearch(searchStudent_t)"
+                                    md-item-text="getFullName(searchItem_t)" md-min-length="0" placeholder="choose preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{searchItem_t.name.first }}  {{ searchItem_t.name.last}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+                </div>
+
+
                <div ng-messages="addStudentForm.FirstPrefer.$error" md-auto-hide="true"
                     ng-if="(addStudentForm.FirstPrefer.$invalid && addStudentForm.SecondPrefer.$invalid )&&
                      (addStudentForm.FirstPrefer.$touched && addStudentForm.SecondPrefer.$touched)">

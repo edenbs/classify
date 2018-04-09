@@ -98,11 +98,12 @@ function convertStudent(exlStd) {
     newStd.prefer = {};
     newStd.prefer.first = exlStd.first_prefer;
     newStd.prefer.second = exlStd.second_prefer;
+    newStd.prefer.third = exlStd.third_prefer;
 
     return newStd;
 };
 
- function saveStudent (req,std) {
+function saveStudent (req,std) {
     //Check if student already exist
     Student.find({'id':std.id},function(err,existingUser) {
             if (existingUser.length) {
@@ -123,4 +124,19 @@ function convertStudent(exlStd) {
                     .then(_.noop);
             }
         });
+};
+
+export function searchStudent(reqs){
+    const searchQuery = {school: reqs.user.school
+        , $or:[{'name.first': {$regex: reqs.params.name, $options: 'i'}},
+            {'name.last':{$regex: reqs.params.name, $options: 'i'}}]
+    };
+
+
+    const query = {
+        sort: reqs.query.sort,
+        limit: parseInt(reqs.query.limit),
+        page: parseInt(reqs.query.page)};
+
+    return Student.paginate(searchQuery,query);
 };

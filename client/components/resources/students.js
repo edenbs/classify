@@ -11,7 +11,7 @@ angular.module('classify')
             },
             'update': {url: '/api/students/:id', method: 'PUT', params: {id: '@_id'}},
             'delete': {url: '/api/students/:id',method: 'DELETE', params: {id: '@_id'}},
-            'upload': {url: '/api/students/upload',method: 'PUT'}
-
+            'upload': {url: '/api/students/upload',method: 'PUT'},
+            'search': {url: '/api/students/:name',method: 'GET',params: {name: '@name'}}
         })
     });
