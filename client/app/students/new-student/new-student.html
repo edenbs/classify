@@ -5,6 +5,7 @@
         </div>
     </md-toolbar>
     <form name="addStudentForm">
+       <div>
         <md-dialog-contnet layout="column" class="md-dialog-content">
             <md-input-container>
                 <label>ID</label>
@@ -19,23 +20,54 @@
                 <input name="lastName" ng-model="student.name.last"  required/>
             </md-input-container>
             <md-input-container>
+                <label>Social Grade</label>
+                <input name="social" type="number" min="1" max="4" ng-model="student.social" required/>
+                <div ng-messages="addStudentForm.social.$error" md-auto-hide="true"
+                     ng-if="addStudentForm.social.$invalid && addStudentForm.social.$touched">
+                    <p ng-message="pattern">Social Grade must be between 1-4</p>
+                </div>
+            </md-input-container>
+            <md-input-container>
                 <md-select ng-model="student.gender" class="md-no-underline">
                     <md-option value="female">Female</md-option>
                     <md-option value="male">Male</md-option>
                 </md-select>
             </md-input-container>
-            <md-input-container>
-                <label>Class</label>
-                <input name="class" ng-model="student.class" required
-                       ng-pattern='/^(\p{L}{1,2}-[1-9][0-9]?)$/'/>
-                <div ng-messages="addStudentForm.class.$error" md-auto-hide="true"
-                     ng-if="addStudentForm.class.$invalid && addStudentForm.class.$touched">
-                    <p ng-message="pattern">Class must be formatted כיתה-מספר</p>
-                </div>
-            </md-input-container>
+           <div layout-margin>
+               <label>Personal Preference</label>
+                   <md-autocomplete md-selected-item="student.prefer.first" md-search-text="searchStudent_f"
+                                    md-items="searchItem in querySearch(searchStudent_f)"
+                                    md-item-text="searchItem.id" placeholder="First preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+                   <md-autocomplete md-selected-item="student.prefer.second" md-search-text="searchStudent_s"
+                                        md-items="searchItem in querySearch(searchStudent_s)"
+                                        md-item-text="searchItem.id" md-min-length="0" placeholder="Second preference">
+                           <md-item-template>
+                               <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                           </md-item-template>
+                       </md-autocomplete>
+                    <md-autocomplete md-selected-item="student.prefer.third" md-search-text="searchStudent_t"
+                                    md-items="searchItem in querySearch(searchStudent_t)"
+                                    md-item-text="searchItem.id" md-min-length="0" placeholder="Third preference">
+                       <md-item-template>
+                           <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                       </md-item-template>
+                   </md-autocomplete>
+               <div ng-messages="addStudentForm.FirstPrefer.$error" md-auto-hide="true"
+                    ng-if="(addStudentForm.FirstPrefer.$invalid && addStudentForm.SecondPrefer.$invalid )&&
+                     (addStudentForm.FirstPrefer.$touched && addStudentForm.SecondPrefer.$touched)">
+                   <p ng-message="pattern">Personal preferations must be at most two students id </p>
+               </div>
+           </div>
         </md-dialog-contnet>
+       </div>
+       <div>
         <md-dialog-actions>
             <md-button ng-click="save()" class="md-primary" ng-disabled="addStudentForm.$invalid">Save</md-button>
         </md-dialog-actions>
+        </div>
     </form>
 </md-dialog>

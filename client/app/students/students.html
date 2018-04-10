@@ -1,8 +1,9 @@
 ﻿<div layout="column" layout-margin>
     <md-card>
         <md-toolbar class="md-table-toolbar md-default" ng-show="!selected.length">
-            <div class="md-toolbar-tools">
+            <div class="md-toolbar-tools" layout="row" layout-align="space-between center">
                 <span>Students</span>
+                <span class="md-caption">* When modifying students, previously generated classes will be deleted</span>
             </div>
         </md-toolbar>
         <md-toolbar class="md-table-toolbar alternate" ng-show="selected.length">
@@ -10,7 +11,7 @@
                 <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="deleteItems()">
-                    <md-icon class="mdi mdi-delete mdi-24px"></md-icon>
+                    <i class="mdi mdi-delete mdi-24px"></i>
                 </md-button>
             </div>
         </md-toolbar>
@@ -33,20 +34,6 @@
                 <label>Last Name</label>
                 <input ng-model="query.name.last" ng-change="onFilter()"/>
             </md-input-container>
-            <md-icon>
-                <i ng-hide="query.class" class="mdi mdi-filter mdi-24px"></i>
-                <i ng-hide="!query.class" class="mdi mdi-filter-remove mdi-24px filter-remove"
-                   ng-click="clearFilter('class')"></i>
-            </md-icon>
-            <md-input-container flex class="input-container-no-spacer">
-                <label>Class</label>
-                <input name="class" ng-model="query.class" ng-change="onFilter()"
-                    ng-pattern='/^(\p{L}{1,2}-[1-9][0-9]?)$/'/>
-                <div ng-messages="studentFilterForm.class.$error" md-auto-hide="true"
-                     ng-if="studentFilterForm.class.$invalid && studentFilterForm.class.$touched">
-                    <p ng-message="pattern">Class must be formatted כיתה-מספר</p>
-                </div>
-            </md-input-container>
         </form>
         <md-table-container>
             <table md-table ng-attr-md-row-select="isEditor()" multiple ng-model="selected" md-progress="deferred">
@@ -55,20 +42,22 @@
                     <th md-column md-order-by="id">ID</th>
                     <th md-column md-order-by="name.first">First Name</th>
                     <th md-column md-order-by="name.last">Last Name</th>
-                    <th md-column md-order-by="class">Class</th>
                     <th md-column md-order-by="gender">Gender</th>
                     <th md-column md-order-by="avgGrade">Average Grade</th>
+                    <th md-column md-order-by="social">Social Grade</th>
+                    <th md-column md-order-by="prefer.first">First Preference</th>
+                    <th md-column md-order-by="prefer.second">Second Preference</th>
+                    <th md-column md-order-by="prefer.third">Third Preference</th>
                 </tr>
                 </thead>
                 <tbody md-body>
                 <tr md-row ng-attr-md-row-select="isEditor()" md-select="item" md-select-id="id" md-auto-select ng-repeat="item in items.docs">
                     <td md-cell>{{ item.id }}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'name.first')">{{ item.name.first }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.name.first }}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'name.last')">{{ item.name.last }}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'name.first')">{{ item.name.first }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.name.last }}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'class')">{{ item.class }}</td>
-                    <td md-cell ng-if="!isEditor()">{{ item.class }}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'name.last')">{{ item.name.last }}</td>
+                    <td md-cell ng-if="!isEditor()">{{ item.gender }}</td>
                     <td md-cell ng-if="isEditor()">
                         <md-input-container>
                             <md-select ng-model="item.gender" class="md-no-underline" ng-change="changeGender(item)">
@@ -77,10 +66,44 @@
                             </md-select>
                         </md-input-container>
                     </td>
-                    <td md-cell ng-if="!isEditor()">{{ item.gender }}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'avgGrade')">{{ item.avgGrade }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.avgGrade }}</td>
-                </tr>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'avgGrade')">{{ item.avgGrade }}</td>
+                    <td md-cell ng-if="!isEditor()">{{ item.social }}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'social')">{{ item.social }}</td>
+                    <td md-cell ng-if="!isEditor()" >{{item.prefer['first']}}</td>
+                    <td md-cell ng-if="isEditor()">
+                        <md-autocomplete md-selected-item="item.prefer.first" md-search-text="searchStudent"
+                                         md-selected-item-change="changePreference(item)"
+                                         md-items="searchItem in querySearch(searchStudent, item)"
+                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference ">
+                            <md-item-template>
+                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </td>
+                    <td md-cell ng-if="!isEditor()" >{{item.prefer['second']}}</td>
+                    <td md-cell ng-if="isEditor()">
+                        <md-autocomplete md-selected-item="item.prefer.second" md-search-text="searchStudent"
+                                         md-selected-item-change="changePreference(item)"
+                                         md-items="searchItem in querySearch(searchStudent, item)"
+                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
+                            <md-item-template>
+                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </td>
+                    <td md-cell ng-if="!isEditor()" >{{item.prefer['third']}}</td>
+                    <td md-cell ng-if="isEditor()">
+                        <md-autocomplete md-selected-item="item.prefer.third" md-search-text="searchStudent"
+                                         md-selected-item-change="changePreference(item)"
+                                         md-items="searchItem in querySearch(searchStudent, item)"
+                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
+                            <md-item-template>
+                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </td>
+                   </tr>
                 </tbody>
             </table>
         </md-table-container>
@@ -92,7 +115,18 @@
         </md-table-pagination>
     </md-card>
 </div>
-<md-button class="md-fab md-fab-bottom-right md-primary" layout layout-align="center center"
-           ng-click="addItem($event)" aria-label="Add new constraint" ng-show="isEditor()">
-    <i class="mdi mdi-plus mdi-24px"></i>
-</md-button>
+
+<md-fab-speed-dial class="md-fab md-fab-bottom-right md-primary" md-open="true" md-direction="up" ng-show="isEditor()">
+    <md-fab-trigger>
+        <md-button class="md-fab md-primary" ng-click="addItem($event)" layout layout-align="center center">
+            <md-tooltip md-direction="left">Add Student</md-tooltip>
+            <i class="mdi mdi-plus mdi-24px"></i>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+        <md-button class="md-fab md-raised md-mini" ng-click="uploadStudents($event)" layout layout-align="center center">
+            <md-tooltip md-direction="left">Upload Excel</md-tooltip>
+            <i class="mdi mdi-upload mdi-24px"></i>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

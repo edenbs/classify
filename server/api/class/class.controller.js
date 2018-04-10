@@ -37,7 +37,10 @@ export function download(req, res) {
                     'ID': s.id,
                     'Gender': s.gender,
                     'Average Grade': s.avgGrade,
-                    'Social': s.social
+                    'Social': s.social,
+                    'First Prefer': s.prefer.first,
+                    'Second Prefer': s.prefer.second,
+                    'Third Prefer': s.prefer.third
                 })));
                 XLSX.utils.book_append_sheet(wb, ws, `Class ${c.index}`);
             });

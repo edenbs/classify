@@ -9,8 +9,9 @@ angular.module('classify', [
     'fixed.table.header',
     'ngResource',
     'ngCookies',
-    'angularXRegExp'
-    ])
+    'angularXRegExp',
+    'ngFileUpload'
+])
     .config(function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $mdThemingProvider, $mdAriaProvider) {
         $urlRouterProvider
             .otherwise('/');
@@ -76,5 +77,5 @@ angular.module('classify', [
                     });
             }
         });
-    });
+    })
 

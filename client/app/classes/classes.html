@@ -1,13 +1,13 @@
 <div layout="column" layout-margin>
-    <md-card>
-        <md-toolbar class="md-table-toolbar md-default" ng-show="!selected.length">
+    <span layout-margin ng-if=!classes.length>No Classes Were Generated</span>
+    <md-card ng-if=classes.length>
+        <md-toolbar class="md-table-toolbar md-default" >
             <div class="md-toolbar-tools">
                 <span>Classes</span>
             </div>
         </md-toolbar>
         <div ng-cloak>
-            <h3 ng-if=!classes.length>No Classes Were Generated</h3>
-            <md-tabs md-dynamic-height md-border-bottom ng-if=classes.length>
+            <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab ng-repeat="class in classes | orderBy: 'index'" label="{{class.index}}" md-on-select="loadClass(class)">
                     <md-table-container ng-show="currClass">
                         <table md-table>

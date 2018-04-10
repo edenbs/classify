@@ -1,0 +1,37 @@
+<md-dialog flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span class="md-headline">Load students from excel</span>
+        </div>
+    </md-toolbar>
+    <form name="uploadStudentsForm">
+        <div>
+            <md-dialog-contnet layout="column" class="md-dialog-content">
+                <h5>File Drag/Drop supported only .xlsx</h5>
+                <md-input-container ng-show="!file">
+                    <div ngf-drop="" ngf-select="" ngf-change="uploadExcel($files)" class="drop-box" ngf-drag-over-class="dragover"
+                         ngf-accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ngf-pattern="'.xlsx'"
+                         ngf-allow-dir="true">Drop file here or click to upload</div>
+                </md-input-container>
+                <md-input-container>
+                <md-input-container ng-show="file && (file.progress<100)">
+                    <b>Uploaded File:</b>
+                        {{file.name}}
+                </md-input-container>
+                <md-input-container ng-show="file">
+                    <b>Progress:</b>
+                    <span class="progress" >
+                          <div style="width:{{file.progress}}%" ng-bind="file.progress + '%'" ></div>
+                    </span>
+                    <p ng-show="file.progress==100 && !errorMsg">File: <b>{{file.name}}</b> was uploaded successfully!</p>
+                    <p style="color: red" ng-show="errorMsg"> error :{{errorMsg}}</p>
+                </md-input-container>
+            </md-dialog-contnet>
+        </div>
+        <div>
+            <md-dialog-actions>
+                <md-button ng-click="close()" class="md-primary" ng-disabled="addStudentForm.$invalid">close</md-button>
+            </md-dialog-actions>
+        </div>
+    </form>
+</md-dialog>

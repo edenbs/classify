@@ -1,6 +1,7 @@
 ﻿'use strict';
 
-angular.module('classify').controller('StudentsController', function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast, auth) {
+angular.module('classify').controller('StudentsController'
+    ,function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast ,auth,Upload,$timeout) {
     $scope.items = students;
     $scope.selected = [];
 
@@ -19,13 +20,12 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                 'required': true
             }
         },
-        class: {
-            'required': true,
-            'ng-pattern':/^(\p{L}{1,2}-[1-9][0-9]?)$/
-        },
         avgGrade: {
             'required': true,
             'ng-pattern': '/^([0-9]|[1-8][0-9]|9[0-9]|100)$/'
+        },
+        social: {
+            'pattern': '[1-4]'
         }
     };
 
@@ -38,13 +38,12 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                 'required': 'Last name is required'
             }
         },
-        class: {
-            'required': 'Class is required',
-            'pattern': 'Class must be formatted {class}-{number}'
-        },
         avgGrade: {
             'required': 'Avergae grade is required',
             'pattern': 'Avergae grade must be between 0 to 100'
+        },
+        social: {
+            'pattern': 'social grade must be between 1 and 4'
         }
     };
 
@@ -86,8 +85,7 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             templateUrl: 'app/students/new-student/new-student.html',
             targetEvent: ev,
             clickOutsideToClose: true
-        })
-            .then(function (student) {
+        }).then(function (student) {
                 return $students.save(student).$promise;
             })
             .then(function () {
@@ -118,12 +116,16 @@ angular.module('classify').controller('StudentsController', function($scope, $md
                         $mdToast.showSimple('Student updated successfully');
                     })
                     .catch(function (err) {
-                        if (err) $mdToast.showSimple('Error updating student');
+                        if (err) $mdToast.showSimple('Error updating student: ' + err.data.message);
                     });
 
                 return $scope.deferred;
             }
         })
+    };
+
+    $scope.isEditor = function () {
+        return auth.hasRole('editor');
     };
 
     $scope.changeGender = function (student) {
@@ -136,7 +138,47 @@ angular.module('classify').controller('StudentsController', function($scope, $md
             });
     };
 
-    $scope.isEditor = function () {
-        return auth.hasRole('editor');
+    $scope.uploadStudents = function (event) {
+        $mdDialog.show({
+            controller: 'UploadStudentsController',
+            templateUrl: 'app/students/upload-students/upload-students.html',
+            targetEvent: event,
+            clickOutsideToClose: true
+        }).then(function () {
+            $mdToast.showSimple('Uploading operation ended');
+            $scope.getItems();
+
+        }).catch(function (err) {
+            if (err) $mdToast.showSimple('Error uploading students');
+        });
+
+    };
+
+    /* Preference section */
+    /*Searching for preferred student*/
+    $scope.querySearch = function(search, item) {
+        return $students.search({
+            sort: 'name.first',
+            limit: 10,
+            page: 1,
+            name: search
+        }).$promise.then(function (items) {$scope.lastSearch = items.docs; return _.map(items.docs, 'id')});
+    };
+
+    /*Changing current user relevant preference*/
+    $scope.changePreference = function (student) {
+        return $students.update(student).$promise
+            .then(function () {
+                $mdToast.showSimple('Student preference updated successfully');
+            })
+            .catch(function (err) {
+                if (err) $mdToast.showSimple('Error updating student preference: ' + err.data.message);
+            });
+    };
+
+    /*Present given student full name*/
+    $scope.getFullName = function (id) {
+        var item = _.find($scope.lastSearch, {id: id});
+        return item ? (item.name.first + " " +item.name.last + " (" + item.id + ")") : id;
     };
 });

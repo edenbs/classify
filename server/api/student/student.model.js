@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import {createSeedModel} from 'mongoose-plugin-seed';
 import seed from './student.seed';
 import mongoosePaginate from 'mongoose-paginate';
-import XRegExp from 'xregexp';
 import idvalidator from 'mongoose-id-validator';
 
 const Schema = mongoose.Schema;
@@ -18,16 +17,7 @@ const studentSchema = new Schema({
     name: {
         first: String,
         last: String
-    },
-    class: {
-        type: String,
-        validate: {
-            validator: function(v) {
-                return new XRegExp('^(\\p{L}{1,2}-[1-9][0-9]?)$').test(v)
-            },
-            message: '{VALUE} is not a valid class'
-        }
-    },
+     },
     school: {
         type: Schema.Types.ObjectId,
         ref: 'School',
@@ -43,6 +33,22 @@ const studentSchema = new Schema({
         type: Number,
         min: 0,
         max: 100
+    },
+    social: {
+        type: Number,
+        min: 1,
+        max: 4
+    },
+    prefer: {
+        first: {
+            type: String
+        },
+        second: {
+            type: String
+        },
+        third: {
+            type: String
+        }
     }
 });
 
