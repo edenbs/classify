@@ -116,23 +116,11 @@ export function searchStudent(req){
         page: parseInt(req.query.page)};
 
     const searchQuery = {
+        id: {$nin: [req.query.currStudent, req.query.firstPref || '', req.query.secondPref || '', req.query.thirdPref || '']},
         school: req.user.school,
         $or: [{'name.first': {$regex: req.query.name, $options: 'i'}},
             {'name.last':{$regex: req.query.name, $options: 'i'}}]
     };
 
     return Student.paginate(searchQuery, query);
-
-    /*return Student.findById(req.params.id)
-        .then(errorIfEmpty)
-        .then(student => {
-            const searchQuery = {
-                id: {$nin: [student.id, student.prefer.first || '', student.prefer.second || '', student.prefer.third || '']},
-                school: req.user.school,
-                $or: [{'name.first': {$regex: req.query.name, $options: 'i'}},
-                      {'name.last':{$regex: req.query.name, $options: 'i'}}]
-            };
-
-            return Student.paginate(searchQuery, query);
-        });*/
 }

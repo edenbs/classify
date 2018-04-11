@@ -4,6 +4,8 @@ angular.module('classify').controller('StudentsController'
     ,function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast ,auth,Upload,$timeout) {
     $scope.items = students;
     $scope.selected = [];
+    $scope.searchStudent = '';
+    $scope.lastSearch = [];
 
     $scope.query = {
         sort: 'name.first',
@@ -157,12 +159,29 @@ angular.module('classify').controller('StudentsController'
     /* Preference section */
     /*Searching for preferred student*/
     $scope.querySearch = function(search, item) {
-        return $students.search({
-            sort: 'name.first',
-            limit: 10,
-            page: 1,
-            name: search
-        }).$promise.then(function (items) {$scope.lastSearch = items.docs; return _.map(items.docs, 'id')});
+        var deferred = $q.defer();
+
+        $timeout(function() {
+            $students.search({
+                sort: 'name.first',
+                limit: 10,
+                page: 1,
+                name: search,
+                currStudent: item.id,
+                firstPref: item.prefer.first,
+                secondPref: item.prefer.second,
+                thirdPref: item.prefer.third
+            }).$promise.then(function (items) {
+                    $scope.lastSearch = items.docs;
+
+                    deferred.resolve(_.map(items.docs, 'id'));
+                })
+                .catch(function (err) {
+                    deferred.reject(err);
+                });
+        });
+
+        return deferred.promise;
     };
 
     /*Changing current user relevant preference*/

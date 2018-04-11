@@ -14,7 +14,12 @@ angular.module('classify').controller('UploadStudentsController',function($scope
                 $scope.file.result = response.data;
             }, function (response) {
                 if (response.status !== 200) {
-                    $scope.errorMsg = 'An error occurred uploading the file';
+                    if (response.status === 400) {
+                        $scope.errorMsg = 'Some of the students preferations in excel are invalid';
+                    }
+                    else {
+                        $scope.errorMsg = 'An error occurred uploading the file';
+                    }
                 }
             }, function (evt) {
                 $scope.file.progress = Math.min(100, parseInt(100.0 *

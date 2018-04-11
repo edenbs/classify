@@ -71,11 +71,12 @@
                     <td md-cell ng-if="!isEditor()">{{ item.social }}</td>
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'social')">{{ item.social }}</td>
                     <td md-cell ng-if="!isEditor()" >{{item.prefer['first']}}</td>
-                    <td md-cell ng-if="isEditor()">
+                    <td md-cell ng-if="isEditor()" ng-click="event.stopPropagation()">
                         <md-autocomplete md-selected-item="item.prefer.first" md-search-text="searchStudent"
                                          md-selected-item-change="changePreference(item)"
+                                         md-no-cache="true"
                                          md-items="searchItem in querySearch(searchStudent, item)"
-                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference ">
+                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
                             <md-item-template>
                                 <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
                             </md-item-template>
@@ -85,6 +86,7 @@
                     <td md-cell ng-if="isEditor()">
                         <md-autocomplete md-selected-item="item.prefer.second" md-search-text="searchStudent"
                                          md-selected-item-change="changePreference(item)"
+                                         md-no-cache="true"
                                          md-items="searchItem in querySearch(searchStudent, item)"
                                          md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
                             <md-item-template>
@@ -96,6 +98,7 @@
                     <td md-cell ng-if="isEditor()">
                         <md-autocomplete md-selected-item="item.prefer.third" md-search-text="searchStudent"
                                          md-selected-item-change="changePreference(item)"
+                                         md-no-cache="true"
                                          md-items="searchItem in querySearch(searchStudent, item)"
                                          md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
                             <md-item-template>
