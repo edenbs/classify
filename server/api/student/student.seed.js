@@ -50,5 +50,29 @@ export default {
         prefer: {'first':'313562894',
             'second':'123456789'},
         social: 1
+    },{
+        id: '312497720',
+        name: {
+            first: 'Bar',
+            last: 'Leiman'
+        },
+        school: schools[0],
+        gender: 'female',
+        avgGrade: 92,
+        prefer: {'first':'313562894',
+            'second':'123456789'},
+        social: 4
+    },{
+        id: '312526285',
+        name: {
+            first: 'Danielle',
+            last: 'Zror'
+        },
+        school: schools[0],
+        gender: 'female',
+        avgGrade: 96,
+        prefer: {'first':'313562894',
+            'second':'123456789'},
+        social: 4
     }]
 }
