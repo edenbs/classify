@@ -1,0 +1,43 @@
+<md-dialog flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span class="md-headline">Load students from excel</span>
+        </div>
+    </md-toolbar>
+    <form name="editPreferences" modelValue>
+        <div layout-margin>
+            <label>Personal Preference</label>
+            <md-autocomplete md-selected-item="preferences.first" md-search-text="searchStudent_f"
+                             md-items="searchItem in querySearch(searchStudent_f,preferences)"
+                             md-item-text="searchItem.id" placeholder="First preference">
+                <md-item-template>
+                    <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                </md-item-template>
+            </md-autocomplete>
+            <md-autocomplete md-selected-item="preferences.second" md-search-text="searchStudent_s"
+                             md-items="searchItem in querySearch(searchStudent_s,preferences)"
+                             md-item-text="searchItem.id" md-min-length="0" placeholder="Second preference">
+                <md-item-template>
+                    <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                </md-item-template>
+            </md-autocomplete>
+            <md-autocomplete md-selected-item="preferences.third" md-search-text="searchStudent_t"
+                             md-items="searchItem in querySearch(searchStudent_t,preferences)"
+                             md-item-text="searchItem.id" md-min-length="0" placeholder="Third preference">
+                <md-item-template>
+                    <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                </md-item-template>
+            </md-autocomplete>
+            <div ng-messages="editPreferences.FirstPrefer.$error" md-auto-hide="true"
+                 ng-if="(editPreferences.FirstPrefer.$invalid && editPreferences.SecondPrefer.$invalid )&&
+                     (editPreferences.FirstPrefer.$touched && editPreferences.SecondPrefer.$touched)">
+                <p ng-message="pattern">Personal preferences must be at most two students id </p>
+            </div>
+        </div>
+    </form>
+    <div>
+        <md-dialog-actions>
+            <md-button ng-click="save()" class="md-primary" ng-disabled="addStudentForm.$invalid">Save</md-button>
+        </md-dialog-actions>
+    </div>
+</md-dialog>

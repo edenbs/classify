@@ -115,12 +115,28 @@ export function searchStudent(req){
         limit: parseInt(req.query.limit),
         page: parseInt(req.query.page)};
 
-    const searchQuery = {
-        id: {$nin: [req.query.currStudent, req.query.firstPref || '', req.query.secondPref || '', req.query.thirdPref || '']},
-        school: req.user.school,
-        $or: [{'name.first': {$regex: req.query.name, $options: 'i'}},
-            {'name.last':{$regex: req.query.name, $options: 'i'}}]
-    };
+    var searchQuery = {};
+
+    // ByName
+    if(req.query.name) {
+        var searchQuery = {
+            id: {$nin: [req.query.currStudent, req.query.firstPref || '', req.query.secondPref || '', req.query.thirdPref || '']},
+            school: req.user.school,
+            $or: [{'name.first': {$regex: req.query.name, $options: 'i'}},
+                {'name.last': {$regex: req.query.name, $options: 'i'}}]
+        };
+
+        return Student.paginate(searchQuery, query);
+    }
+    // ByID
+    else if(req.query.id) {
+        var searchQuery = {
+            id: {$regex: req.query.id, $options: 'i'},
+            school: req.user.school
+        };
+
+        return Student.paginate(searchQuery, query);
+    }
 
     return Student.paginate(searchQuery, query);
 }

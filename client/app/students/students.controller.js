@@ -156,48 +156,21 @@ angular.module('classify').controller('StudentsController'
 
     };
 
-    /* Preference section */
-    /*Searching for preferred student*/
-    $scope.querySearch = function(search, item) {
-        var deferred = $q.defer();
+    $scope.editPreference = function (event,student) {
+        $mdDialog.show({
+                controller: 'EditPreferenceController',
+                templateUrl: 'app/students/edit-preferences/edit-preferences.html',
+                targetEvent: event,
+                locals : {
+                    student: student
+                },
+                clickOutsideToClose: true
+            }).then(function () {
+                $mdToast.showSimple('Editing preferences operation ended');
 
-        $timeout(function() {
-            $students.search({
-                sort: 'name.first',
-                limit: 10,
-                page: 1,
-                name: search,
-                currStudent: item.id,
-                firstPref: item.prefer.first,
-                secondPref: item.prefer.second,
-                thirdPref: item.prefer.third
-            }).$promise.then(function (items) {
-                    $scope.lastSearch = items.docs;
-
-                    deferred.resolve(_.map(items.docs, 'id'));
-                })
-                .catch(function (err) {
-                    deferred.reject(err);
-                });
-        });
-
-        return deferred.promise;
-    };
-
-    /*Changing current user relevant preference*/
-    $scope.changePreference = function (student) {
-        return $students.update(student).$promise
-            .then(function () {
-                $mdToast.showSimple('Student preference updated successfully');
-            })
-            .catch(function (err) {
-                if (err) $mdToast.showSimple('Error updating student preference: ' + err.data.message);
+            }).catch(function (err) {
+                if (err) $mdToast.showSimple('Error Editing preferences');
             });
-    };
 
-    /*Present given student full name*/
-    $scope.getFullName = function (id) {
-        var item = _.find($scope.lastSearch, {id: id});
-        return item ? (item.name.first + " " +item.name.last + " (" + item.id + ")") : id;
     };
 });
