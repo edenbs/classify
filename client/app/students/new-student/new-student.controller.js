@@ -5,6 +5,9 @@ angular.module('classify')
         $scope.student = {name: {}, gender: '', avgGrade: 0, prefer: {}};
         $scope.simulateQuery=true;
         $scope.searchStds = [];
+        $scope.validID = true;
+        $scope.IDLength = 9;
+
         $scope.searchQuery= {
             sort: 'name.first',
             limit: 10,
@@ -13,6 +16,24 @@ angular.module('classify')
 
         $scope.save = function () {
             $mdDialog.hide($scope.student);
+        };
+
+        $scope.validateID = function(id){
+            if  (id){
+                if (id.length == $scope.IDLength) {
+                    $students.search({
+                        sort: 'name.first',
+                        limit: 10,
+                        page: 1,
+                        id:id
+                    }).$promise.then(function (items) {
+                        if(items.docs.length > 0) {
+                            $scope.validID = false;
+                        }else
+                            $scope.validID =  true;
+                    });
+                }
+            }
         };
 
         /* Preference section */
