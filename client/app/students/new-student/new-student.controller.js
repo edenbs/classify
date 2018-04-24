@@ -21,12 +21,11 @@ angular.module('classify')
         $scope.validateID = function(id){
             if  (id){
                 if (id.length == $scope.IDLength) {
-                    $students.search({
-                        sort: 'name.first',
-                        limit: 10,
-                        page: 1,
-                        id:id
-                    }).$promise.then(function (items) {
+                    $students.getByID({id:id}).$promise.then(function (items) {
+
+                        console.log("hereeeeee");
+                        console.log(items);
+
                         if(items.docs.length > 0) {
                             $scope.validID = false;
                         }else

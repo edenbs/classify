@@ -57,10 +57,3 @@ studentSchema.index( { "id": 1, "school": 1 }, { unique: true ,background: false
 
 var Students = module.exports =  createSeedModel('Student', studentSchema, seed);
 
-Students.ensureIndexes({ "id": 1, "school": 1 },function (err) {
-    if (err) console.log(err)
-});
-
-Students.on('index', function (err) {
-    if (err) console.log(err)
-});

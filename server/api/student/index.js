@@ -7,6 +7,7 @@ const router = new AsyncRouter();
 
 router.get('/', hasRole(['manager', 'editor', 'viewer']), paginate.middleware(10,15), controller.index);
 router.get('/search', hasRole(['editor']),controller.searchStudent);
+router.get('/:id', hasRole(['editor']),controller.searchStudentByID);
 router.post('/', hasRole('editor'), controller.create);
 router.put('/upload', hasRole('editor'), multiparty(), controller.loadExcel);
 router.put('/:id', hasRole('editor'), controller.update);
