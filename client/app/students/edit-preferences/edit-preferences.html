@@ -1,0 +1,39 @@
+<md-edit-dialog>
+    <form name="editPreferenceForm" layout-column>
+        <md-autocomplete name="firstPreference" md-selected-item="preferences.first" md-search-text="searchStudent1"
+                         md-selected-item-change="editPreferenceForm.$setDirty()"
+                         md-no-cache="true"
+                         md-items="searchItem in querySearch(searchStudent1)"
+                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose first preference">
+            <md-item-template>
+                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+            </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete name="secondPreference" md-selected-item="preferences.second" md-search-text="searchStudent2"
+                         md-selected-item-change="editPreferenceForm.$setDirty()"
+                         md-no-cache="true"
+                         md-items="searchItem in querySearch(searchStudent2)"
+                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose second preference">
+            <md-item-template>
+                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+            </md-item-template>
+        </md-autocomplete>
+        <md-autocomplete name="thirdPreference" md-selected-item="preferences.third" md-search-text="searchStudent3"
+                         md-selected-item-change="editPreferenceForm.$setDirty()"
+                         md-no-cache="true"
+                         md-items="searchItem in querySearch(searchStudent3)"
+                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose third preference">
+            <md-item-template>
+                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+            </md-item-template>
+        </md-autocomplete>
+        <div layout="row" layout-align="end" class="md-actions" layout-align="space-between">
+            <md-button class="md-primary" ng-click="cancel()" flex>
+                <span>Cancel</span>
+            </md-button>
+            <md-button class="md-primary" ng-click="update($event)" flex ng-disabled="editPreferenceForm.$invalid || !editPreferenceForm.$dirty">
+                <span>Save</span>
+            </md-button>
+        </div>
+    </form>
+</md-edit-dialog>

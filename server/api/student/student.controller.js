@@ -49,8 +49,11 @@ export function update(req) {
             return Class.remove({school: req.user.school})
                 .then(() => student);
         })
-        .then(student => student.set(data).save())
-        .then(_.noop);
+        .then(student => {
+            student.set(data);
+            if (data.prefer) swapPreferences(student);
+            return student.save();
+        })
 }
 
 export function remove (req) {
@@ -62,6 +65,7 @@ export function remove (req) {
                 .then(() => student);
         })
         .then(student => student.remove())
+        .then(student => rescueFriends(student.id, req.user.school))
         .then(_.noop);
 }
 
@@ -123,4 +127,39 @@ export function searchStudent(req){
     };
 
     return Student.paginate(searchQuery, query);
+}
+
+function rescueFriends (studentID, school) {
+    return Student.find({
+        school,
+        $or: [{'prefer.first': studentID},
+            {'prefer.second': studentID},
+            {'prefer.third': studentID}]
+    }).then(students => {
+        return Promise.all(_.map(students, student => {
+            _.forIn(student.prefer, (value, key) => {
+                if (value === studentID) {
+                    student.prefer[key] = null;
+                }
+            });
+
+            swapPreferences(student);
+            return student.save();
+        }))
+    })
+}
+
+function swapPreferences (student) {
+    if (student.prefer.second && !student.prefer.first) {
+        student.prefer.first = student.prefer.second;
+        student.prefer.second = null;
+    }
+    if (student.prefer.third && !student.prefer.second) {
+        student.prefer.second = student.prefer.third;
+        student.prefer.third = null;
+    }
+    if (student.prefer.second && !student.prefer.first) {
+        student.prefer.first = student.prefer.second;
+        student.prefer.second = null;
+    }
 }

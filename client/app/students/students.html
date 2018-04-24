@@ -45,9 +45,7 @@
                     <th md-column md-order-by="gender">Gender</th>
                     <th md-column md-order-by="avgGrade">Average Grade</th>
                     <th md-column md-order-by="social">Social Grade</th>
-                    <th md-column md-order-by="prefer.first">First Preference</th>
-                    <th md-column md-order-by="prefer.second">Second Preference</th>
-                    <th md-column md-order-by="prefer.third">Third Preference</th>
+                    <th md-column>Preferences</th>
                 </tr>
                 </thead>
                 <tbody md-body>
@@ -70,41 +68,9 @@
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'avgGrade')">{{ item.avgGrade }}</td>
                     <td md-cell ng-if="!isEditor()">{{ item.social }}</td>
                     <td md-cell ng-if="isEditor()" ng-click="edit($event, item, 'social')">{{ item.social }}</td>
-                    <td md-cell ng-if="!isEditor()" >{{item.prefer['first']}}</td>
-                    <td md-cell ng-if="isEditor()" ng-click="event.stopPropagation()">
-                        <md-autocomplete md-selected-item="item.prefer.first" md-search-text="searchStudent"
-                                         md-selected-item-change="changePreference(item)"
-                                         md-no-cache="true"
-                                         md-items="searchItem in querySearch(searchStudent, item)"
-                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
-                            <md-item-template>
-                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
-                    </td>
-                    <td md-cell ng-if="!isEditor()" >{{item.prefer['second']}}</td>
-                    <td md-cell ng-if="isEditor()">
-                        <md-autocomplete md-selected-item="item.prefer.second" md-search-text="searchStudent"
-                                         md-selected-item-change="changePreference(item)"
-                                         md-no-cache="true"
-                                         md-items="searchItem in querySearch(searchStudent, item)"
-                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
-                            <md-item-template>
-                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
-                    </td>
-                    <td md-cell ng-if="!isEditor()" >{{item.prefer['third']}}</td>
-                    <td md-cell ng-if="isEditor()">
-                        <md-autocomplete md-selected-item="item.prefer.third" md-search-text="searchStudent"
-                                         md-selected-item-change="changePreference(item)"
-                                         md-no-cache="true"
-                                         md-items="searchItem in querySearch(searchStudent, item)"
-                                         md-item-text="searchItem.id" md-min-length="0" placeholder="choose preference">
-                            <md-item-template>
-                                <span md-highlight-text="searchStudent" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
+                    <td md-cell ng-if="!isEditor()" >{{ item.prefer | joinBy }}</td>
+                    <td md-cell ng-if="isEditor()" ng-click="editPreferences($event, item)">
+                        {{ item.prefer | joinBy }}
                     </td>
                    </tr>
                 </tbody>

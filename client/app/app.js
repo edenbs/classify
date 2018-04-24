@@ -78,4 +78,9 @@ angular.module('classify', [
             }
         });
     })
+    .filter('joinBy', function () {
+       return function(input, seperator) {
+           return _.compact(_.values(input || {})).join(seperator || ', ');
+       }
+    });
 

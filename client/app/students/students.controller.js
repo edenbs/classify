@@ -4,8 +4,6 @@ angular.module('classify').controller('StudentsController'
     ,function($scope, $mdEditDialog, students, $students, $q, $mdDialog, $mdToast ,auth,Upload,$timeout) {
     $scope.items = students;
     $scope.selected = [];
-    $scope.searchStudent = '';
-    $scope.lastSearch = [];
 
     $scope.query = {
         sort: 'name.first',
@@ -72,13 +70,18 @@ angular.module('classify').controller('StudentsController'
     };
 
     $scope.deleteItems = function () {
-        $q.all(_.map($scope.selected, function (item) {
-            return $students.delete({}, item).$promise;
-        }))
-            .then(function () {
-                $mdToast.showSimple('Student deleted successfully');
-                $scope.getItems();
+        var promise = $q.resolve();
+
+        _.forEach($scope.selected, function (item) {
+            promise = promise.then(function () {
+                return $students.delete({}, item).$promise;
             });
+        });
+
+        promise.then(function () {
+            $mdToast.showSimple('Student deleted successfully');
+            $scope.getItems();
+        });
     };
 
     $scope.addItem = function (ev) {
@@ -100,6 +103,8 @@ angular.module('classify').controller('StudentsController'
     };
 
     $scope.edit = function (event, student, property) {
+        event.stopPropagation();
+
         // Access nested properties
         var getPropertyIn = _.property(_.toPath(property));
 
@@ -122,6 +127,33 @@ angular.module('classify').controller('StudentsController'
                     });
 
                 return $scope.deferred;
+            }
+        })
+    };
+
+    $scope.editPreferences = function (event, student) {
+        event.stopPropagation();
+
+        $mdEditDialog.show({
+            controller: 'EditPreferences',
+            templateUrl: 'app/students/edit-preferences/edit-preferences.html',
+            targetEvent: event,
+            clickOutsideToClose: false,
+            locals: {
+                item: student,
+                save: function (preferences) {
+                        $scope.deferred = $students.update({id: student._id}, {prefer: preferences}).$promise
+                            .then(function (savedStudent) {
+                                student.prefer = savedStudent.prefer;
+
+                                $mdToast.showSimple('Student preference updated successfully');
+                            })
+                            .catch(function (err) {
+                                if (err) $mdToast.showSimple('Error updating student preference: ' + err.data.message);
+                            });
+
+                        return $scope.deferred;
+                    }
             }
         })
     };
@@ -153,7 +185,6 @@ angular.module('classify').controller('StudentsController'
         }).catch(function (err) {
             if (err) $mdToast.showSimple('Error uploading students');
         });
-
     };
 
     /* Preference section */
@@ -182,22 +213,5 @@ angular.module('classify').controller('StudentsController'
         });
 
         return deferred.promise;
-    };
-
-    /*Changing current user relevant preference*/
-    $scope.changePreference = function (student) {
-        return $students.update(student).$promise
-            .then(function () {
-                $mdToast.showSimple('Student preference updated successfully');
-            })
-            .catch(function (err) {
-                if (err) $mdToast.showSimple('Error updating student preference: ' + err.data.message);
-            });
-    };
-
-    /*Present given student full name*/
-    $scope.getFullName = function (id) {
-        var item = _.find($scope.lastSearch, {id: id});
-        return item ? (item.name.first + " " +item.name.last + " (" + item.id + ")") : id;
     };
 });
