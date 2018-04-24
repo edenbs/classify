@@ -1,0 +1,17 @@
+.new-student md-input-container {
+    margin: 0;
+}
+
+.new-student .prefers {
+    margin-top: 15px;
+    padding: 2px;
+}
+
+.new-student .prefers md-autocomplete {
+    margin: 5px 0;
+}
+
+.new-student .prefers .md-caption {
+    font-size: 10px;
+    margin-left: 10px;
+}

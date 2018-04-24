@@ -27,10 +27,12 @@ export function index(req) {
 
 export function create (req) {
     const data = _.pick(req.body, ['id', 'name', 'gender', 'avgGrade','social','prefer']);
-
     data.school = req.user.school;
 
-    return new Student(data).save()
+    const student = new Student(data);
+    swapPreferences(student);
+
+    return student.save()
         .then(student => {
             return Class.remove({school: req.user.school})
                 .then(() => student);
@@ -104,7 +106,12 @@ export function loadExcel(req){
 
         return Class.remove({school: req.user.school})
             .then(() => Student.remove({school: req.user.school}))
-            .then(() => Promise.all(records.map(rec => new Student(rec).save())))
+            .then(() => Promise.all(records.map(rec => {
+                const student = new Student(rec);
+
+                swapPreferences(student);
+                return student.save();
+            })))
             .then(_.noop);
     }
     catch (err){

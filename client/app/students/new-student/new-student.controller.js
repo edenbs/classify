@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('classify')
-    .controller('AddStudent', function ($scope, $mdDialog,$students,$q, $timeout) {
-        $scope.student = {name: {}, gender: 'female', avgGrade: 0, prefer: {}};
+    .controller('AddStudent', function ($scope, $mdDialog, $students) {
+        $scope.student = {name: {}, gender: '', avgGrade: 0, prefer: {}};
         $scope.simulateQuery=true;
         $scope.searchStds = [];
         $scope.searchQuery= {

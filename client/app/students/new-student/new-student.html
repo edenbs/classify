@@ -1,4 +1,4 @@
-<md-dialog flex="30">
+<md-dialog flex="30" class="new-student">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <span class="md-headline">Add New Student</span>
@@ -28,39 +28,35 @@
                 </div>
             </md-input-container>
             <md-input-container>
-                <md-select ng-model="student.gender" class="md-no-underline">
+                <label>Gender</label>
+                <md-select ng-model="student.gender">
                     <md-option value="female">Female</md-option>
                     <md-option value="male">Male</md-option>
                 </md-select>
             </md-input-container>
-           <div layout-margin>
-               <label>Personal Preference</label>
-                   <md-autocomplete md-selected-item="student.prefer.first" md-search-text="searchStudent_f"
-                                    md-items="searchItem in querySearch(searchStudent_f)"
-                                    md-item-text="searchItem.id" placeholder="First preference">
+            <div class="prefers">
+               <md-autocomplete md-selected-item="student.prefer.first" md-search-text="searchStudent_f"
+                                md-items="searchItem in querySearch(searchStudent_f)"
+                                md-item-text="searchItem.id" md-min-length="0" placeholder="First preference">
+                   <md-item-template>
+                       <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                   </md-item-template>
+               </md-autocomplete>
+               <md-autocomplete md-selected-item="student.prefer.second" md-search-text="searchStudent_s"
+                                    md-items="searchItem in querySearch(searchStudent_s)"
+                                    md-item-text="searchItem.id" md-min-length="0" placeholder="Second preference">
                        <md-item-template>
-                           <span md-highlight-text="searchStudent_f" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                           <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
                        </md-item-template>
                    </md-autocomplete>
-                   <md-autocomplete md-selected-item="student.prefer.second" md-search-text="searchStudent_s"
-                                        md-items="searchItem in querySearch(searchStudent_s)"
-                                        md-item-text="searchItem.id" md-min-length="0" placeholder="Second preference">
-                           <md-item-template>
-                               <span md-highlight-text="searchStudent_s" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
-                           </md-item-template>
-                       </md-autocomplete>
-                    <md-autocomplete md-selected-item="student.prefer.third" md-search-text="searchStudent_t"
-                                    md-items="searchItem in querySearch(searchStudent_t)"
-                                    md-item-text="searchItem.id" md-min-length="0" placeholder="Third preference">
-                       <md-item-template>
-                           <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
-                       </md-item-template>
-                   </md-autocomplete>
-               <div ng-messages="addStudentForm.FirstPrefer.$error" md-auto-hide="true"
-                    ng-if="(addStudentForm.FirstPrefer.$invalid && addStudentForm.SecondPrefer.$invalid )&&
-                     (addStudentForm.FirstPrefer.$touched && addStudentForm.SecondPrefer.$touched)">
-                   <p ng-message="pattern">Personal preferations must be at most two students id </p>
-               </div>
+                <md-autocomplete md-selected-item="student.prefer.third" md-search-text="searchStudent_t"
+                                md-items="searchItem in querySearch(searchStudent_t)"
+                                md-item-text="searchItem.id" md-min-length="0" placeholder="Third preference">
+                   <md-item-template>
+                       <span md-highlight-text="searchStudent_t" md-highlight-flags="^i">{{getFullName(searchItem)}}</span>
+                   </md-item-template>
+               </md-autocomplete>
+               <span class="md-caption">Non sequential preferences will be rearranged!</span>
            </div>
         </md-dialog-contnet>
        </div>
