@@ -126,7 +126,7 @@ export function searchStudent(req){
         limit: parseInt(req.query.limit),
         page: parseInt(req.query.page)};
 
-       var searchQuery = {
+    const searchQuery = {
         id: {$nin: [req.query.currStudent, req.query.firstPref || '', req.query.secondPref || '', req.query.thirdPref || '']},
         school: req.user.school,
         $or: [{'name.first': {$regex: req.query.name, $options: 'i'}},
@@ -135,6 +135,20 @@ export function searchStudent(req){
 
     return Student.paginate(searchQuery, query);
 }
+
+export function searchStudentByID(req) {
+    const query = {
+        sort: 'name.first',
+        limit: 10,
+        page: 1};
+
+    const searchQuery = {
+        id: {$regex: req.params.id, $options: 'i'},
+        school: req.user.school
+    };
+
+    return Student.paginate(searchQuery, query);
+};
 
 function rescueFriends (studentID, school) {
     return Student.find({
