@@ -55,5 +55,4 @@ studentSchema.plugin(idvalidator);
 studentSchema.plugin(mongoosePaginate);
 studentSchema.index( { "id": 1, "school": 1 }, { unique: true ,background: false } );
 
-var Students = module.exports =  createSeedModel('Student', studentSchema, seed);
-
+export default createSeedModel('Student', studentSchema, seed);

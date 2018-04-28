@@ -9,7 +9,7 @@
         <md-dialog-contnet layout="column" class="md-dialog-content">
             <md-input-container>
                 <label>ID</label>
-                <input name="ID" ng-model="student.id" required ng-mouseleave="validateID(student.id)"/>
+                <input name="ID" ng-model="student.id" required ng-change="validateID(student.id)" maxlength="9" minlength="9"/>
                 <div ng-messages="addStudentForm.ID.$error" md-auto-hide="true" ng-if="!validID">
                     <p>ID invalid or already exist</p>
                 </div>
@@ -45,9 +45,7 @@
                     <md-option value="male">Male</md-option>
                 </md-select>
             </md-input-container>
-           <div >
-               <label>Personal Preference</label>
-               <br>
+            <div class="prefers">
                <md-autocomplete md-selected-item="student.prefer.first" md-search-text="searchStudent_f"
                                 md-items="searchItem in querySearch(searchStudent_f)"
                                 md-item-text="searchItem.id" md-min-length="0" placeholder="First preference">

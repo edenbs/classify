@@ -6,7 +6,6 @@ angular.module('classify')
         $scope.simulateQuery=true;
         $scope.searchStds = [];
         $scope.validID = true;
-        $scope.IDLength = 9;
 
         $scope.searchQuery= {
             sort: 'name.first',
@@ -19,20 +18,9 @@ angular.module('classify')
         };
 
         $scope.validateID = function(id){
-            if  (id){
-                if (id.length == $scope.IDLength) {
-                    $students.getByID({id:id}).$promise.then(function (items) {
-
-                        console.log("hereeeeee");
-                        console.log(items);
-
-                        if(items.docs.length > 0) {
-                            $scope.validID = false;
-                        }else
-                            $scope.validID =  true;
-                    });
-                }
-            }
+            $students.getByID({id:id}).$promise.then(function (items) {
+                $scope.validID = items.docs.length === 0;
+            });
         };
 
         /* Preference section */
