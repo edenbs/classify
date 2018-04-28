@@ -136,6 +136,20 @@ export function searchStudent(req){
     return Student.paginate(searchQuery, query);
 }
 
+export function searchStudentByID(req) {
+    const query = {
+        sort: 'name.first',
+        limit: 10,
+        page: 1};
+
+    const searchQuery = {
+        id: {$regex: req.params.id, $options: 'i'},
+        school: req.user.school
+    };
+
+    return Student.paginate(searchQuery, query);
+};
+
 function rescueFriends (studentID, school) {
     return Student.find({
         school,

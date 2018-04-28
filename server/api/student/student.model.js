@@ -11,8 +11,7 @@ const genders = ['male', 'female'];
 const studentSchema = new Schema({
     id: {
        type: String,
-       required: true,
-       unique: true
+       required: true
     },
     name: {
         first: String,
@@ -54,5 +53,6 @@ const studentSchema = new Schema({
 
 studentSchema.plugin(idvalidator);
 studentSchema.plugin(mongoosePaginate);
+studentSchema.index( { "id": 1, "school": 1 }, { unique: true ,background: false } );
 
 export default createSeedModel('Student', studentSchema, seed);
