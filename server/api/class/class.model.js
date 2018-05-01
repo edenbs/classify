@@ -25,6 +25,10 @@ const classSchema = new Schema({
         type: Number,
         required: true
     },
+    avgSocial: {
+        type: Number,
+        required: true
+    },
     genders: {
         male: {
             type: Number,
@@ -41,6 +45,7 @@ classSchema.pre('validate', function() {
     return this.populate('students').execPopulate().then(() => {
         const genders = _.countBy(this.students, 'gender');
 
+        this.avgSocial = _.meanBy(this.students, 'social');
         this.avgGrade = _.meanBy(this.students, 'avgGrade');
         this.genders = {
             male: genders.male || 0,

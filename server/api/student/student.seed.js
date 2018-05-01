@@ -1,8 +1,36 @@
 import School from '../school/school.model.js';
+import _ from 'lodash';
+import random_name from 'node-random-name';
+const TIMES = 45;
+const students = _.times(TIMES);
 
 export default {
     dependencies: [School],
-    seed: (schools) => [{
+    seed: (schools) =>
+        _.times(TIMES, i => {
+            const name = random_name({seed: Math.random()}).split(' ');
+            const first = _.sample(_.without(students, i));
+            const second = _.sample(_.without(students, i, first));
+            const third = _.sample(_.without(students, i, first, second));
+            const pad = n => n.toString().padLeft(9, '0');
+
+            return {
+                id: pad(i),
+                name: {
+                    first: name[0],
+                    last: name[1]
+                },
+                school: schools[1],
+                gender: ['male', 'female'][_.random(0, 1)],
+                avgGrade: _.random(60, 100),
+                prefer: {
+                    first: pad(first),
+                    second: pad(second),
+                    third: pad(third)
+                },
+                social: _.random(1, 4)
+            }
+        }).concat([{
         id: '313562894',
         name: {
             first: 'Eden',
@@ -74,5 +102,5 @@ export default {
         prefer: {'first':'313562894',
             'second':'123456789'},
         social: 4
-    }]
+    }])
 }

@@ -14,7 +14,8 @@ export default gulp => {
             },
 
             // Watch core server file(s) that require server restart on change
-            watch: [config.paths.server]
+            watch: [config.paths.server],
+            ignore: ['server/api/class/class.alg.js']
         });
     });
 };

@@ -35,8 +35,9 @@
                     <div layout="row">
                         <div layout="column" layout-align="center" class="md-table-pagination">
                             <span>Statistics&nbsp;&nbsp;-&nbsp;&nbsp;
-                                Male-Female proportion in class is {{currClass.genders.male/currClass.students.length}}-{{currClass.genders.female/currClass.students.length}} |
-                                Average grade is {{currClass.avgGrade}}
+                                Male-Female proportion in class is {{(currClass.genders.male/currClass.students.length) | number}}-{{(currClass.genders.female/currClass.students.length) | number}} |
+                                Average grade is {{currClass.avgGrade | number}} |
+                                Average social is {{currClass.avgSocial | number}}
                             </span>
                         </div>
                         <md-table-pagination
