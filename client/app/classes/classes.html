@@ -50,6 +50,15 @@
             </md-tabs>
         </div>
     </md-card>
+    <md-card layout-padding>
+        <span class="md-caption" ng-attr-style="{{currClass.index === class.index ? 'font-weight: boldd;' : null}}" ng-repeat="class in classes">
+            Class {{class.index}}&nbsp;&nbsp;-&nbsp;&nbsp;
+            Male-Female proportion in class is {{(class.genders.male/class.students.length) | number}}-{{(class.genders.female/class.students.length) | number}} |
+            Average grade is {{class.avgGrade | number}} |
+            Average social is {{class.avgSocial | number}} |
+            Average Prefers is {{class.avgPrefers | number}}
+        </span>
+    </md-card>
 </div>
 <md-button class="md-fab md-fab-bottom-right md-primary" layout layout-align="center center"
            ng-click="export($event)" aria-label="Add new constraint">

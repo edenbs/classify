@@ -5,7 +5,7 @@ angular.module('classify').controller('ClassesController', function($scope, $mdE
     $scope.currClass = null;
 
     $scope.paginate = {
-        limit: 10,
+        limit: 5,
         currPage: 1
     };
 
