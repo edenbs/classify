@@ -1,7 +1,7 @@
 import School from '../school/school.model.js';
 import _ from 'lodash';
 import random_name from 'node-random-name';
-const TIMES = 45;
+const TIMES = 90;
 const students = _.times(TIMES);
 
 export default {
@@ -22,7 +22,7 @@ export default {
                 },
                 school: schools[1],
                 gender: ['male', 'female'][_.random(0, 1)],
-                avgGrade: _.random(60, 100),
+                avgGrade: _.random(40, 100),
                 prefer: {
                     first: pad(first),
                     second: pad(second),

@@ -57,7 +57,7 @@ export function generate(req) {
 
     return Class.remove({school: req.user.school})
         .then(() => Student.find({school: req.user.school}))
-        .then(students => execFile('node', ['class.alg.js'], {
+        .then(students => execFile('node', ['alg'], {
             cwd: __dirname,
             env: {
                 CLASSIFY_PARAMS: JSON.stringify({maxStudents: req.body.maxStudents, students})
