@@ -3,7 +3,7 @@ import Student from '../student/student.model';
 import createError from 'http-errors';
 import XLSX from 'xlsx';
 import {promisify} from 'util';
-const execFile = promisify(require('child_process').execFile);
+import {spawn} from 'child_process';
 import _ from 'lodash';
 
 const errorIfEmpty = result => result || Promise.reject(createError(404));
@@ -57,13 +57,30 @@ export function generate(req) {
 
     return Class.remove({school: req.user.school})
         .then(() => Student.find({school: req.user.school}))
-        .then(students => execFile('node', ['alg'], {
-            cwd: __dirname,
-            env: {
-                CLASSIFY_PARAMS: JSON.stringify({maxStudents: req.body.maxStudents, students})
-            }
-        }))
-        .then(({stdout, stderr}) => JSON.parse(stdout))
+        .then(students => {
+            return new Promise((resolve, reject) => {
+                const alg = spawn('node', ['alg'], {
+                    cwd: __dirname,
+                    stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+                    env: Object.assign({}, process.env, {
+                        CLASSIFY_PARAMS: JSON.stringify({maxStudents: req.body.maxStudents, students})
+                    })
+                });
+
+                alg.on('message', data => {
+                    resolve(JSON.parse(data));
+                });
+
+                alg.on('close', () => {
+                    console.log('Process has finished');
+                });
+
+                alg.on('error', () => {
+                    console.log('Process has failed');
+                    reject('Process has failed');
+                });
+            });
+        })
         .then(classes => Promise.all(classes.map(c => new Class(_.extend(c, {school: req.user.school})).save())))
         .then(_.noop);
 }

@@ -14,21 +14,20 @@ import School from './api/school/school.model.js';
 
 mongooseConfig(mongoose)
     .then(() => {
-        School.find({name: 'Gimnasia Realit'})
+        /*School.find({name: 'Gimnasia Realit'})
             .then(school => {
                 return Student.find({school});
             })
             .then(students => {
                 process.env.CLASSIFY_PARAMS = JSON.stringify({students, maxStudents: 30});
-                const alg = require('./api/class/alg');
+                require('./api/class/alg');
 
-                alg();
                 process.exit(0);
             })
             .catch(err => {
                 console.log(err);
                 process.exit(1);
-            });
+            });*/
 
         app.listen(process.env.PORT, () => {
             logger.info('Express listening on port %s', process.env.PORT);

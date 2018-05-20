@@ -1,6 +1,6 @@
 const GeneticAlgorithm = require('geneticalgorithm');
 const _ = require('lodash');
-const fitnessFunction = require('./fitness.js');
+const {getClassesFitness, getPrefersSuccessCount, fitnessFunction} = require('./fitness.js');
 
 const {students, maxStudents} = JSON.parse(process.env.CLASSIFY_PARAMS);
 const numClasses = Math.ceil(students.length / maxStudents);
@@ -10,8 +10,6 @@ const firstClasses = _.times(numClasses, i => ({
     index: i + 1,
     students: _.slice(students, studentsPerClass * i, studentsPerClass * (i + 1))
 }));
-
-console.log(fitnessFunction(firstClasses));
 
 const config = {
     mutationFunction: classes => {
@@ -70,36 +68,40 @@ const config = {
 
         return [classes];
     },
-    fitnessFunction,
-    doesABeatBFunction: (classesA, classesB) => {
-        const DIVERSITY = 0;
-        const fitnessA = fitnessFunction(classesA);
-        const fitnessB = fitnessFunction(classesB);
-
-        return Math.abs(fitnessA - fitnessB) > DIVERSITY ? fitnessA - fitnessB > 0 : false;
-    },
+    fitnessFunction: fitnessFunction,
     population: [firstClasses],
     populationSize: 100
 };
 
-module.exports = function () {
-    const algorithm = GeneticAlgorithm(config);
-    /*console.log(algorithm.bestScore());
-    _.times(30, () => {
-        console.log('======');
-        algorithm.evolve();
-        console.log(algorithm.bestScore());
-    });*/
+const algorithm = GeneticAlgorithm(config);
+let best = null;
+let currBest = algorithm.best();
 
-    /*
-     _.times(10, () => {
-     algorithm.evolve();
-     console.log(algorithm.bestScore());
-     });*/
-
-    //console.log(algorithm.bestScore());
-
-    return algorithm;
+const evolve = () => {
+    algorithm.evolve();
+    currBest = algorithm.best();
+    console.log('======');
+    console.log('All: ', algorithm.bestScore());
+    console.log('Count: ', getPrefersSuccessCount(currBest));
+    console.log('Fitness: ', getClassesFitness(currBest));
 };
+//console.log(fitnessFunction(firstClasses));
 
-//console.log(JSON.stringify(algorithm.best()));
+while (getPrefersSuccessCount(currBest) !== students.length) {
+    evolve();
+}
+
+
+_.times(30, i => {
+    evolve();
+
+    console.log('Improvement try number ', i);
+
+    if (getPrefersSuccessCount(currBest) === students.length) {
+        best = currBest;
+    }
+});
+
+console.log('Best was found: ', getClassesFitness(best));
+
+process.send && process.send(JSON.stringify(best));
