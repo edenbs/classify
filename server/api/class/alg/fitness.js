@@ -19,6 +19,10 @@ const types = {
     }
 };
 
+const girlsInStudentsRatio = _.filter(students, {gender: 'female'}).length / students.length;
+const GENDER_DIFF_THRESHOLD = 0.03;
+const GENDER_DIFF_PENALTY_FACTOR = 1.5;
+
 const getFitness = (classes, type) => {
     // Difference between each class' average grade to global average grade
     const classesAvgGradesDiffFromAll = classes.map(c => Math.abs(type.all - _.meanBy(c.students, type.field)));
@@ -56,11 +60,32 @@ const getFitness = (classes, type) => {
     return avgGradeFitness * 0.6 + gradesDeviationFitness * 0.4;
 };
 
+const getGenderRatioFitness = classes => {
+    const girlsRatioInClasses = _.map(classes, c => {
+        return _.filter(c.students, {gender: 'female'}).length / c.students.length;
+    });
+    const girlsRatioDiff = _.map(girlsRatioInClasses, ratioInClass => Math.abs(girlsInStudentsRatio - ratioInClass));
+    const genderRatioPenalties = _.map(girlsRatioDiff, diff => {
+        return diff < GENDER_DIFF_THRESHOLD ? 0 : (diff - GENDER_DIFF_THRESHOLD) * GENDER_DIFF_PENALTY_FACTOR;
+    });
+    const fitness =  _.sum(genderRatioPenalties) > 1 ? 0 : 1 - _.sum(genderRatioPenalties);
+/*
+    console.log('====== Gender');
+    console.log('Female/Students: ', girlsInStudentsRatio);
+    console.log('Female/Students in classes: ', girlsRatioInClasses);
+    console.log('Diff: ', girlsRatioDiff);
+    console.log('Penalties: ', genderRatioPenalties);
+    console.log('Fitness: ' + fitness);
+*/
+    return fitness;
+} ;
+
 const getClassesFitness = classes => {
     const gradeFitness = getFitness(classes, types['grade']);
     const socialFitness = getFitness(classes, types['social']);
+    const genderRatioFitness = getGenderRatioFitness(classes);
 
-    return gradeFitness * 0.6 + socialFitness * 0.4;
+    return gradeFitness * 0.55 + socialFitness * 0.35 + genderRatioFitness * 0.1;
 };
 
 const getPrefersSuccessCount = classes => {
