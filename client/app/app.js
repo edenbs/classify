@@ -10,7 +10,8 @@ angular.module('classify', [
     'ngResource',
     'ngCookies',
     'angularXRegExp',
-    'ngFileUpload'
+    'ngFileUpload',
+    'btford.socket-io'
 ])
     .config(function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $mdThemingProvider, $mdAriaProvider) {
         $urlRouterProvider

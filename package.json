@@ -60,7 +60,10 @@
     "node-random-name": "^1.0.1",
     "passport-local-mongoose": "^4.4.0",
     "pify": "^3.0.0",
+    "socket.io": "^2.1.1",
     "standard-deviation": "^1.0.0",
+    "uuid4": "^1.0.0",
+    "variance": "0.0.1",
     "xlsjs": "^1.0.1",
     "xregexp": "^4.0.0"
   }

@@ -5,6 +5,9 @@ import XLSX from 'xlsx';
 import {promisify} from 'util';
 import {spawn} from 'child_process';
 import _ from 'lodash';
+import logger from '../../components/logger';
+import {onGenerateComplete} from '../../config/socketio';
+import uuid from 'uuid4';
 
 const errorIfEmpty = result => result || Promise.reject(createError(404));
 const errorIfNotSchool = (c, school) => c.school.equals(school) ? c : Promise.reject(createError(403));
@@ -58,7 +61,9 @@ export function generate(req) {
     return Class.remove({school: req.user.school})
         .then(() => Student.find({school: req.user.school}))
         .then(students => {
-            return new Promise((resolve, reject) => {
+            const id = uuid();
+
+            new Promise((resolve, reject) => {
                 const alg = spawn('node', ['alg'], {
                     cwd: __dirname,
                     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
@@ -79,8 +84,11 @@ export function generate(req) {
                     console.log('Process has failed');
                     reject('Process has failed');
                 });
-            });
-        })
-        .then(classes => Promise.all(classes.map(c => new Class(_.extend(c, {school: req.user.school})).save())))
-        .then(_.noop);
+            })
+                .then(classes => Promise.all(classes.map(c => new Class(_.extend(c, {school: req.user.school})).save())))
+                .then(() => onGenerateComplete(id))
+                .catch(err => logger.error({err}, 'Error occurred while generating classes'));
+
+            return {uuid: id};
+        });
 }
