@@ -6,7 +6,7 @@ import {promisify} from 'util';
 import {spawn} from 'child_process';
 import _ from 'lodash';
 import logger from '../../components/logger';
-import {onGenerateComplete} from '../../config/socketio';
+import {onGenerateComplete, onGenerateTimeout, onGenerateFail} from '../../config/socketio';
 import uuid from 'uuid4';
 
 const errorIfEmpty = result => result || Promise.reject(createError(404));
@@ -61,10 +61,21 @@ export function generate(req) {
     return Class.remove({school: req.user.school})
         .then(() => Student.find({school: req.user.school}))
         .then(students => {
+            if (students.length <= req.body.maxStudents) return Promise.reject(createError(400, 'Insufficient number of students in school'));
+
             const id = uuid();
+            let timeout = false;
+            let alg = null;
+
+            setTimeout(() => {
+                if (alg) {
+                    alg.kill(9);
+                    timeout = true;
+                }
+            }, parseInt(process.env.ALG_TIMEOUT_IN_MIN  || 10) * 60 * 1000);
 
             new Promise((resolve, reject) => {
-                const alg = spawn('node', ['alg'], {
+                alg = spawn('node', ['alg'], {
                     cwd: __dirname,
                     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
                     env: Object.assign({}, process.env, {
@@ -73,21 +84,35 @@ export function generate(req) {
                 });
 
                 alg.on('message', data => {
+                    logger.info('Process has finished');
+                    alg = null;
                     resolve(JSON.parse(data));
                 });
 
-                alg.on('close', () => {
-                    console.log('Process has finished');
+                alg.on('close', code => {
+                    alg = null;
+
+                    if (code && code !== 0) {
+                        onGenerateFail(id);
+                        reject('Process has failed');
+                    }
+
+                    if (timeout) {
+                        onGenerateTimeout(id);
+                        reject('Timeout while generating classes');
+                    }
                 });
 
                 alg.on('error', () => {
-                    console.log('Process has failed');
-                    reject('Process has failed');
+                    alg = null;
+                    reject('Process has failed to start');
                 });
             })
                 .then(classes => Promise.all(classes.map(c => new Class(_.extend(c, {school: req.user.school})).save())))
                 .then(() => onGenerateComplete(id))
-                .catch(err => logger.error({err}, 'Error occurred while generating classes'));
+                .catch(err => {
+                    logger.error({err}, 'Error occurred while generating classes')
+                });
 
             return {uuid: id};
         });

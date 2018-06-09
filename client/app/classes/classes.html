@@ -1,6 +1,6 @@
 <div layout="column" layout-margin>
     <span layout-margin ng-if=!classes.length>No Classes Were Generated</span>
-    <md-card ng-if=classes.length>
+    <md-card ng-if="classes.length">
         <md-toolbar class="md-table-toolbar md-default" >
             <div class="md-toolbar-tools">
                 <span>Classes</span>
@@ -50,7 +50,7 @@
             </md-tabs>
         </div>
     </md-card>
-    <md-card layout-padding>
+    <md-card ng-if="classes.length" layout-padding>
         <span class="md-caption" ng-attr-style="{{currClass.index === class.index ? 'font-weight: boldd;' : null}}" ng-repeat="class in classes">
             Class {{class.index}}&nbsp;&nbsp;-&nbsp;&nbsp;
             Male-Female proportion in class is {{(class.genders.male/class.students.length) | number}}-{{(class.genders.female/class.students.length) | number}} |

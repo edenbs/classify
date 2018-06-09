@@ -5,10 +5,28 @@ angular.module('classify')
             ioSocket: ioSocket
         });
         var registeredEvents = {};
+        var registeredEventsErrors = {};
 
         return {
-            register: function(uuid, cb) {
+            register: function(uuid, cb, errCb) {
                 registeredEvents[uuid] = cb;
+                registeredEventsErrors[uuid] = errCb;
+                socket.on('timeout-' + uuid, function () {
+                    if (registeredEventsErrors[uuid]) {
+                        registeredEventsErrors[uuid]();
+                    }
+                    $mdToast.show($mdToast.simple()
+                        .textContent('The system couldn\'t find optimal classes in a reasonable time'));
+                });
+
+                socket.on('fail-' + uuid, function () {
+                    if (registeredEventsErrors[uuid]) {
+                        registeredEventsErrors[uuid]();
+                    }
+                    $mdToast.show($mdToast.simple()
+                        .textContent('An error occurred while generating classes'));
+                });
+
                 socket.on('complete-' + uuid, function () {
                     if (registeredEvents[uuid]) {
                         registeredEvents[uuid]();
@@ -28,6 +46,7 @@ angular.module('classify')
             },
             unregister: function(uuid) {
                 delete registeredEvents[uuid];
+                delete registeredEventsErrors[uuid];
             }
         };
     });
